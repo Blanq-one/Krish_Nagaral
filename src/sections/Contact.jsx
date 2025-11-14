@@ -12,13 +12,13 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
   
-  // Replace 'YOUR_FORM_ID' with your actual Formspree form ID
-  // Get it from: https://formspree.io/ (free service)
+  // Formspree endpoint for contact form
+  // Form ID: mjkjgvkq
   const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ID 
     ? `https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_ID}`
-    : 'https://formspree.io/f/YOUR_FORM_ID';
+    : 'https://formspree.io/f/mjkjgvkq';
   
-  const isFormConfigured = !FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID');
+  const isFormConfigured = true; // Form is now configured
 
   const handleSubmit = async (e) => {
     e.preventDefault();
