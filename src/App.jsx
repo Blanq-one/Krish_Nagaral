@@ -18,7 +18,7 @@ const AppContent = () => {
 
   useEffect(() => {
     // Handle smooth scrolling for anchor links (only on home page)
-    if (location.pathname === '/' || location.pathname === '/portfolio/') {
+    if (location.pathname === '/' || location.pathname === '/Krish_Nagaral/') {
       // Check if we're navigating back from project detail
       const fromProjectDetail = sessionStorage.getItem('fromProjectDetail');
       const savedScrollPosition = sessionStorage.getItem('scrollPosition');
@@ -109,7 +109,7 @@ const AppContent = () => {
 };
 
 function App() {
-  const basename = import.meta.env.PROD ? '/portfolio' : '/';
+  const basename = import.meta.env.PROD ? '/Krish_Nagaral' : '/';
   
   return (
     <BrowserRouter basename={basename}>
