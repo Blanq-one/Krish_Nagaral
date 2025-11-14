@@ -43,7 +43,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       >
         <div className="p-6 border-b border-gray-800">
           <h1 className="text-2xl font-bold text-white">Krish Nagaral</h1>
-          <p className="text-sm text-gray-400 mt-1">AI/ML Engineer | MSCS Student</p>
+          <p className="text-sm text-white mt-2">AI/ML Engineer | Published Researcher | Cloud Computing Specialist</p>
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
@@ -94,7 +94,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               <div className="p-6 border-b border-gray-800 flex items-center justify-between">
                 <div>
                   <h1 className="text-2xl font-bold text-white">Krish Nagaral</h1>
-                  <p className="text-sm text-gray-400 mt-1">AI/ML Engineer | MSCS Student</p>
+                  <p className="text-sm text-white mt-2">AI/ML Engineer | Published Researcher | Cloud Computing Specialist</p>
                 </div>
                 <button
                   onClick={onClose}

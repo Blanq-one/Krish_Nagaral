@@ -21,35 +21,54 @@ const AppContent = () => {
     if (location.pathname === '/' || location.pathname === '/portfolio/') {
       // Check if we're navigating back from project detail
       const fromProjectDetail = sessionStorage.getItem('fromProjectDetail');
+      const savedScrollPosition = sessionStorage.getItem('scrollPosition');
       
-      const scrollToHash = () => {
-        const hash = window.location.hash;
-        
-        if (hash) {
-          // If hash exists (e.g., #projects), scroll to it
-          setTimeout(() => {
-            const element = document.querySelector(hash);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }, 100);
-        } else if (!fromProjectDetail) {
-          // If no hash and not from project detail, it's a refresh - go to homepage
-          window.scrollTo(0, 0);
+      // If coming back from project detail, restore the scroll position
+      if (fromProjectDetail && savedScrollPosition) {
+        setTimeout(() => {
+          // Remove hash if exists to prevent scrolling to it
+          if (window.location.hash) {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+          // Restore saved scroll position
+          window.scrollTo({
+            top: parseInt(savedScrollPosition),
+            behavior: 'smooth'
+          });
+          // Clear the flags
+          sessionStorage.removeItem('scrollPosition');
+          sessionStorage.removeItem('fromProjectDetail');
+        }, 50);
+      } else {
+        // This is a refresh or initial load - always go to homepage
+        // Clear any hash from URL
+        if (window.location.hash) {
+          window.history.replaceState(null, '', window.location.pathname);
         }
-        // If no hash and from project detail, browser preserves scroll position
-      };
-
-      scrollToHash();
-      window.addEventListener('hashchange', scrollToHash);
-
-      // Clear the flag after handling navigation
-      if (fromProjectDetail) {
+        window.scrollTo(0, 0);
+        // Clear any leftover flags
+        sessionStorage.removeItem('scrollPosition');
         sessionStorage.removeItem('fromProjectDetail');
       }
-
+      
+      // Handle hash changes for sidebar navigation (only if not from project detail)
+      const handleHashChange = () => {
+        if (!fromProjectDetail) {
+          const hash = window.location.hash;
+          if (hash) {
+            setTimeout(() => {
+              const element = document.querySelector(hash);
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }, 100);
+          }
+        }
+      };
+      
+      window.addEventListener('hashchange', handleHashChange);
       return () => {
-        window.removeEventListener('hashchange', scrollToHash);
+        window.removeEventListener('hashchange', handleHashChange);
       };
     }
   }, [location]);

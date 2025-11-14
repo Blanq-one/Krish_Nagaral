@@ -1,13 +1,20 @@
 import { motion } from 'framer-motion';
 import { Menu, X, Download } from 'lucide-react';
 
+// Helper function to get correct path for public assets
+const getPublicPath = (path) => {
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  return baseUrl + cleanPath;
+};
+
 const Navbar = ({ onMenuToggle, isMenuOpen }) => {
   const handleMenuClick = () => {
     onMenuToggle?.();
   };
 
   const handleResumeClick = () => {
-    window.open('/resume.pdf', '_blank');
+    window.open(getPublicPath('Krish Nagaral.pdf'), '_blank');
   };
 
   return (
@@ -33,10 +40,10 @@ const Navbar = ({ onMenuToggle, isMenuOpen }) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleResumeClick}
-          className="flex items-center gap-2 px-4 py-2 bg-spotify-green hover:bg-spotify-green-hover text-black font-semibold rounded-full transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-spotify-green hover:bg-spotify-green-hover text-black font-semibold rounded-lg transition-colors"
         >
           <Download size={18} />
-          <span className="hidden sm:inline">Resume</span>
+          <span>Resume</span>
         </motion.button>
       </div>
     </motion.nav>

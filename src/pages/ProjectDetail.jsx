@@ -42,19 +42,19 @@ const ProjectDetail = () => {
   return (
     <div className="min-h-screen bg-spotify-black text-white pt-16">
       <div className="container mx-auto max-w-5xl px-6 py-12">
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => {
-              // Mark that we're navigating from project detail
-              sessionStorage.setItem('fromProjectDetail', 'true');
-              navigate('/#projects');
-            }}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Projects</span>
-          </motion.button>
+                <motion.button
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  onClick={() => {
+                    // Mark that we're navigating from project detail (scroll position already saved)
+                    sessionStorage.setItem('fromProjectDetail', 'true');
+                    navigate('/');
+                  }}
+                  className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
+                >
+                  <ArrowLeft size={20} />
+                  <span>Back to Projects</span>
+                </motion.button>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

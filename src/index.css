@@ -17,6 +17,23 @@ body {
   overflow-x: hidden;
 }
 
+/* Increase body text contrast (10-15% brighter) */
+p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.text-gray-300 {
+  color: rgba(220, 220, 220, 0.95) !important;
+}
+
+.text-gray-400 {
+  color: rgba(170, 170, 170, 0.95) !important;
+}
+
+.text-gray-500 {
+  color: rgba(150, 150, 150, 0.9) !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
