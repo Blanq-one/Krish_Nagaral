@@ -49,6 +49,14 @@ html {
 }
 
 /* Swiper Custom Styles */
+/* Center the arrows on the card image (h-48 = 12rem, so 6rem from the top)
+   instead of the whole slider, so they never sit over card text. */
+.swiper {
+  --swiper-navigation-size: 40px;
+  --swiper-navigation-top-offset: 6rem;
+  --swiper-navigation-sides-offset: 12px;
+}
+
 .swiper-button-next,
 .swiper-button-prev {
   color: #1db954 !important;
@@ -69,6 +77,11 @@ html {
 .swiper-button-prev:hover {
   background: rgba(29, 185, 84, 0.2);
   color: #1ed760 !important;
+}
+
+.swiper .swiper-button-prev.swiper-button-disabled,
+.swiper .swiper-button-next.swiper-button-disabled {
+  opacity: 0;
 }
 
 .swiper-pagination-bullet {
