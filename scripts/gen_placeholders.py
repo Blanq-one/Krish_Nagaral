@@ -7,7 +7,43 @@ OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
 projects = [
     ("offline_gpt.svg", ["Offline ChatGPT", "Local LLM Chat"], "AI / ML"),
     ("captioncraft.svg", ["CaptionCraft AI", "Image Captioning"], "Computer Vision"),
+    ("nexusflow.svg", ["NexusFlow", "MCP Server for n8n"], "Automation"),
 ]
+
+# Optional per-image motif drawn on the right side (keyed by filename)
+WORKFLOW_MOTIF = '''
+
+  <!-- workflow graph motif -->
+  <g fill="none" stroke="#1db954" stroke-width="2.5" stroke-linecap="round" opacity="0.75">
+    <path d="M542 220 C575 220 575 160 608 160"/>
+    <path d="M542 220 C575 220 575 280 608 280"/>
+    <path d="M652 160 C683 160 683 220 713 220"/>
+    <path d="M652 280 C683 280 683 220 713 220"/>
+  </g>
+  <g fill="#1db954">
+    <circle cx="542" cy="220" r="4"/>
+    <circle cx="608" cy="160" r="4"/>
+    <circle cx="608" cy="280" r="4"/>
+    <circle cx="652" cy="160" r="4"/>
+    <circle cx="652" cy="280" r="4"/>
+    <circle cx="713" cy="220" r="4"/>
+  </g>
+  <g fill="#1db954" fill-opacity="0.14" stroke="#1db954" stroke-opacity="0.8" stroke-width="1.5">
+    <rect x="498" y="198" width="44" height="44" rx="10"/>
+    <rect x="608" y="138" width="44" height="44" rx="10"/>
+    <rect x="608" y="258" width="44" height="44" rx="10"/>
+    <rect x="713" y="198" width="44" height="44" rx="10"/>
+  </g>
+  <g fill="#1ed760">
+    <path d="M514 210 L530 220 L514 230 Z"/>
+    <circle cx="630" cy="160" r="6"/>
+    <circle cx="630" cy="280" r="6"/>
+    <rect x="726" y="211" width="18" height="18" rx="3"/>
+  </g>'''
+
+MOTIFS = {
+    "nexusflow.svg": WORKFLOW_MOTIF,
+}
 
 TEMPLATE = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-label="{aria}">
   <defs>
@@ -36,7 +72,7 @@ TEMPLATE = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" widt
 
   <rect width="800" height="450" fill="url(#bg)"/>
   <rect width="800" height="450" fill="url(#neural)" opacity="0.5"/>
-  <rect width="800" height="450" fill="url(#glow)"/>
+  <rect width="800" height="450" fill="url(#glow)"/>{motif}
 
   <!-- category pill -->
   <g transform="translate(56, 70)">
@@ -76,6 +112,7 @@ for fname, lines, category in projects:
         line2_el=line2_el,
         t1y=t1y,
         uy=uy,
+        motif=MOTIFS.get(fname, ""),
     )
     path = os.path.join(OUT, fname)
     with open(path, "w", encoding="utf-8") as f:

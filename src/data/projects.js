@@ -129,7 +129,7 @@ export const projects = {
       title: "NexusFlow - AI Assistant for n8n Automation",
       description: "Integration layer bridging AI assistants and the n8n automation platform, letting users build and manage complex workflow automations through natural language",
       tech: ["JavaScript", "n8n", "LLM", "Workflow Automation", "REST APIs"],
-      image: getPublicPath("nexusflow.jpg"),
+      image: getPublicPath("nexusflow.svg"),
       github: "https://github.com/Blanq-one/NexusFlow-The-AI-Assistant-for-n8n-Workflow-Automation",
       demo: ""
     },
