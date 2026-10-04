@@ -27,11 +27,6 @@ const ProjectCard = ({ project }) => {
           alt={project.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           onError={(e) => {
-            console.error(`Failed to load image: ${project.image}`);
-            const fullUrl = project.image.startsWith('http') 
-              ? project.image 
-              : `${window.location.origin}${project.image}`;
-            console.error(`Trying to load from: ${fullUrl}`);
             e.target.style.display = 'none';
             if (!e.target.parentElement.querySelector('.error-message')) {
               const errorDiv = document.createElement('div');
@@ -39,9 +34,6 @@ const ProjectCard = ({ project }) => {
               errorDiv.textContent = 'Image not found';
               e.target.parentElement.appendChild(errorDiv);
             }
-          }}
-          onLoad={() => {
-            console.log(`Successfully loaded image: ${project.image}`);
           }}
         />
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />

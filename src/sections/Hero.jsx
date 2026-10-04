@@ -109,12 +109,7 @@ const Hero = () => {
                 src={getPublicPath("pfp.png")}
                 alt="Krish Nagaral"
                 className="w-full h-full object-cover"
-                onLoad={() => {
-                  console.log("Profile picture loaded successfully from: /pfp.png");
-                }}
                 onError={(e) => {
-                  console.error("Failed to load profile picture from: /pfp.png");
-                  console.error("Trying full URL:", window.location.origin + "/pfp.png");
                   e.target.style.display = 'none';
                   if (!e.target.parentElement.querySelector('.pfp-fallback')) {
                     e.target.parentElement.innerHTML = '<div class="pfp-fallback w-full h-full flex items-center justify-center text-4xl font-bold text-black">KN</div>';
