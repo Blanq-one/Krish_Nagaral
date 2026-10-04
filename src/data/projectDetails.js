@@ -296,5 +296,302 @@ export const projectDetails = {
     challenges: "One of the primary challenges was designing an efficient model that could run in real-time on resource-constrained devices like Raspberry Pi while maintaining accuracy. This was addressed by implementing two approaches: a lightweight custom CNN for binary classification and a MobileNet transfer learning model for multi-class detection, both optimized for edge deployment. Converting models to TensorFlow Lite format required careful optimization to ensure fast inference while maintaining accuracy. Another significant challenge was integrating real-time image capture with the Raspberry Pi camera module while ensuring seamless inference pipeline. Implementing effective transfer learning with MobileNet required careful design of the dense layers and dropout to improve accuracy for plant disease detection. Ensuring the system provides timely and accessible agricultural support required optimization of the entire pipeline from image capture to disease prediction.",
     
     results: "The system successfully implements an efficient plant disease detection solution that enables on-device real-time diagnosis, making it accessible and timely for agricultural support. By leveraging CNN and MobileNet transfer learning, the system provides both binary and multi-class disease detection capabilities, optimized for deployment on resource-constrained devices. The TensorFlow Lite deployment ensures fast inference on Raspberry Pi, enabling instant on-device classification without requiring cloud connectivity. The PiCamera integration provides seamless real-time image capture and disease prediction, making the system practical for field deployment. This project demonstrates the practical application of edge AI in agriculture, enabling farmers and agricultural professionals to quickly identify plant diseases directly in the field, leading to faster response times and improved crop management. The system showcases how modern deep learning techniques can be optimized for edge devices to provide accessible and efficient solutions for real-world agricultural challenges."
+  },
+
+  // BoxBox - F1 Pit Stop Strategy Optimizer - Project ID: 13
+  13: {
+    overview: "BoxBox is an end-to-end reinforcement learning system that learns optimal Formula 1 pit-stop strategies directly from real race data. A custom Gymnasium environment simulates F1 races lap-by-lap using 45,623 real telemetry laps drawn from 42 Grand Prix, capturing tyre degradation, track position, and race dynamics. A Proximal Policy Optimization (PPO) agent trained in this environment learns when to pit and which strategy to commit to, gaining an average of 5.7 positions over a fixed-window baseline (P7.8 vs P13.5 mean finish) while converging on a 1.3-stop strategy that mirrors real F1 race patterns.",
+
+    features: [
+      "Custom Gymnasium environment simulating F1 races lap-by-lap",
+      "Trained on 45,623 real telemetry laps across 42 Grand Prix",
+      "PPO agent learning optimal pit-stop timing and strategy",
+      "5.7 average position gain over a fixed-window baseline (P7.8 vs P13.5)",
+      "Learned 1.3-stop strategy matching real-world F1 race patterns",
+      "gRPC model serving achieving 4.67ms p95 inference (40x under the 200ms target)",
+      "Live strategy recommendations streamed via Flask-SocketIO",
+      "5-panel Grafana dashboard backed by Prometheus for monitoring",
+      "Tracks action distribution, latency percentiles, and model confidence",
+      "Containerized with Docker for reproducible deployment"
+    ],
+
+    technologies: "BoxBox is built in Python with a custom Gymnasium environment that replays real F1 telemetry to model races lap-by-lap. The PPO agent is trained to maximize finishing position given tyre wear, track state, and pit-stop decisions. For deployment, the trained policy is served over gRPC, hitting 4.67ms p95 inference (40x faster than the 200ms target), while live recommendations are streamed to clients through Flask-SocketIO. The full system is observable: a 5-panel Grafana dashboard backed by Prometheus tracks action distribution, latency percentiles, and model confidence in real time. Everything is containerized with Docker for reproducible, portable deployment.",
+
+    challenges: "The central challenge was translating noisy, high-volume real-world telemetry (45,623 laps) into a clean, reproducible simulation environment that an RL agent could learn from without overfitting to specific races. Designing a reward signal that encouraged realistic strategies—rather than degenerate exploits of the simulator—required careful shaping and validation against known F1 race patterns. On the serving side, meeting an aggressive latency target while streaming live recommendations meant optimizing the inference path with gRPC and validating performance under load. Building meaningful observability for an RL policy (action distribution, confidence, latency) required thoughtful instrumentation with Prometheus and Grafana.",
+
+    results: "The trained PPO agent gains 5.7 positions on average over a fixed-window baseline and independently converges on a 1.3-stop strategy that matches real F1 race behavior, validating that the learned policy captures genuine racing dynamics. The gRPC serving layer delivers 4.67ms p95 inference—40x under target—making the system viable for live, in-race decision support, while the Prometheus/Grafana stack provides full visibility into how the agent behaves in production. BoxBox demonstrates a complete RL lifecycle: environment design from real data, agent training, low-latency serving, real-time streaming, and production monitoring."
+  },
+
+  // InsightPDF - RAG Document Intelligence - Project ID: 14
+  14: {
+    overview: "InsightPDF is an advanced Retrieval-Augmented Generation (RAG) platform that turns dense PDF documents into an intelligent, queryable knowledge base. Built with LangChain and OpenAI, it lets users upload documents and ask natural-language questions, returning accurate, context-aware answers grounded in the source material. By combining hybrid semantic search with large language models, InsightPDF bridges the gap between unstructured documents and instant, reliable understanding.",
+
+    features: [
+      "Upload and index PDF documents for intelligent querying",
+      "Retrieval-Augmented Generation (RAG) for grounded, context-aware answers",
+      "Hybrid semantic search combining vector similarity and keyword relevance",
+      "LangChain orchestration of retrieval and generation pipelines",
+      "OpenAI language models for high-quality natural-language responses",
+      "Citation and source grounding to reduce hallucination",
+      "FAISS-based vector store for fast similarity search",
+      "Chunking and embedding pipeline optimized for document structure",
+      "Developer-friendly API for integration into other applications",
+      "Scalable design suitable for large document collections"
+    ],
+
+    technologies: "InsightPDF is built in Python using LangChain to orchestrate the RAG pipeline and OpenAI models for answer generation. Documents are parsed, chunked, and embedded into a FAISS vector store, enabling fast semantic retrieval. A hybrid search strategy blends dense vector similarity with keyword relevance to surface the most pertinent passages, which are then passed as grounded context to the language model. This architecture ensures answers stay faithful to the source material while remaining fluent and conversational.",
+
+    challenges: "A primary challenge in any RAG system is balancing retrieval precision with recall—surfacing enough context to answer the question without overwhelming the model with irrelevant text. This was addressed through a hybrid search strategy and careful chunking tuned to document structure. Minimizing hallucination required grounding responses in retrieved passages and surfacing citations so users can verify answers. Keeping latency reasonable while embedding and searching large documents demanded an efficient FAISS-backed retrieval layer and a well-structured ingestion pipeline.",
+
+    results: "InsightPDF delivers fast, accurate, and verifiable answers over large PDF collections, making it valuable for researchers, analysts, and professionals who need to extract insight from dense documents quickly. By grounding generation in retrieved context and surfacing citations, the platform produces trustworthy responses rather than unsupported guesses. The modular LangChain pipeline and FAISS vector store make the system easy to extend to new document types and integrate into larger applications."
+  },
+
+  // Marketing Campaign Analytics - Project ID: 15
+  15: {
+    overview: "Marketing Campaign Analytics is a modular machine learning platform designed to predict and optimize the outcomes of marketing campaigns. It combines automated feature engineering, rigorous validation, and explainable AI to help teams understand not just which customers are likely to convert, but why. By surfacing the drivers behind each prediction, the platform turns raw campaign data into actionable, interpretable insight.",
+
+    features: [
+      "Automated feature engineering from raw campaign data",
+      "10-fold cross-validation for robust, reliable performance estimates",
+      "SHAP-based explainability for transparent feature importance",
+      "Customer conversion and response prediction",
+      "Modular pipeline design for easy experimentation and extension",
+      "Comprehensive evaluation metrics and visualizations",
+      "Interpretable insights supporting data-driven marketing decisions",
+      "Reproducible workflow from data ingestion to prediction"
+    ],
+
+    technologies: "The platform is built in Python with scikit-learn at its core, using automated feature engineering to transform raw campaign data into model-ready features. Models are validated with 10-fold cross-validation to produce robust, trustworthy performance estimates rather than over-optimistic single-split results. SHAP (SHapley Additive exPlanations) values provide both global and local explainability, revealing which features drive predictions and how. Pandas powers the data manipulation layer, and the modular architecture makes it straightforward to swap models, add features, or extend the pipeline.",
+
+    challenges: "Marketing datasets are often noisy and imbalanced, making it easy to build models that look accurate but fail to generalize. This was addressed through rigorous 10-fold cross-validation and careful feature engineering. Stakeholders also need to trust and act on predictions, which required moving beyond black-box accuracy to genuine explainability—solved by integrating SHAP to expose the reasoning behind each prediction. Keeping the system modular and reproducible required disciplined pipeline design.",
+
+    results: "Marketing Campaign Analytics enables teams to forecast campaign outcomes with confidence and, crucially, understand the factors behind those outcomes. The combination of robust cross-validation and SHAP explainability ensures predictions are both reliable and interpretable, supporting better targeting, budget allocation, and campaign design. The modular architecture makes the platform a reusable foundation for a wide range of marketing analytics problems."
+  },
+
+  // Diabetes Prediction System - Project ID: 16
+  16: {
+    overview: "This project is an end-to-end machine learning framework for predicting diabetes risk from clinical and lifestyle features. It pairs Local Outlier Factor (LOF) anomaly detection for data cleaning with an ensemble of LightGBM models tuned via GridSearchCV, producing accurate and well-calibrated risk predictions. The pipeline emphasizes data quality, systematic hyperparameter optimization, and reproducibility.",
+
+    features: [
+      "End-to-end ML pipeline from data preprocessing to prediction",
+      "Local Outlier Factor (LOF) for anomaly detection and data cleaning",
+      "LightGBM ensemble for high-accuracy gradient-boosted predictions",
+      "Hyperparameter optimization with GridSearchCV",
+      "Robust handling of noisy and outlier-laden clinical data",
+      "Comprehensive evaluation with multiple performance metrics",
+      "Feature analysis to understand diabetes risk drivers",
+      "Reproducible, modular workflow"
+    ],
+
+    technologies: "Built in Python, the framework uses Local Outlier Factor (LOF) to detect and remove anomalous records before training, improving downstream model quality. The core predictor is an ensemble of LightGBM models—a fast, accurate gradient-boosting framework well suited to tabular clinical data—whose hyperparameters are systematically tuned using GridSearchCV. scikit-learn provides the surrounding pipeline, cross-validation, and evaluation tooling, ensuring the workflow is reproducible and well-validated.",
+
+    challenges: "Clinical datasets frequently contain outliers and noisy measurements that can degrade model performance; this was addressed by applying LOF-based anomaly detection during preprocessing. Achieving strong predictive accuracy required systematic hyperparameter search via GridSearchCV rather than manual tuning, balancing thoroughness against compute cost. Ensuring the model generalized well—rather than overfitting to the training distribution—required careful cross-validation and evaluation across multiple metrics.",
+
+    results: "The system delivers accurate diabetes risk predictions by combining rigorous data cleaning with a tuned LightGBM ensemble. The LOF-based preprocessing step measurably improves data quality, while GridSearchCV optimization extracts strong performance from the gradient-boosted models. The result is a reproducible, end-to-end framework that demonstrates best practices in tabular ML—from anomaly-aware preprocessing to systematic model selection—applied to a meaningful healthcare problem."
+  },
+
+  // Restaurant Analytics & Prediction System - Project ID: 17
+  17: {
+    overview: "The Restaurant Analytics & Prediction System is a professional data pipeline that transforms raw restaurant order data into business-ready insights and forecasts. Architected around SOLID principles for maintainability and clarity, it ingests transactional data, processes it through a clean and extensible pipeline, and produces BI-ready dashboards alongside sales forecasts—helping restaurant operators make data-driven decisions about inventory, staffing, and strategy.",
+
+    features: [
+      "End-to-end data pipeline from raw orders to BI-ready output",
+      "SOLID-principled architecture for maintainability and extensibility",
+      "Sales forecasting to anticipate demand and revenue",
+      "Business intelligence dashboards for actionable insight",
+      "Clean separation of ingestion, processing, and presentation layers",
+      "Reproducible and well-structured data workflow",
+      "Insight generation supporting inventory and staffing decisions",
+      "Extensible design for additional data sources and metrics"
+    ],
+
+    technologies: "Built in Python with Pandas for data manipulation, the system follows SOLID design principles to keep ingestion, transformation, and presentation responsibilities cleanly separated and easy to extend. Order data flows through a structured pipeline that cleans and aggregates transactions, computes business metrics, and generates sales forecasts. The output feeds BI-ready dashboards that surface trends and predictions in a form decision-makers can act on directly.",
+
+    challenges: "Turning messy, real-world transactional data into reliable insight required a robust cleaning and aggregation pipeline that could handle inconsistencies gracefully. Applying SOLID principles to a data project—where ad-hoc scripts are common—took deliberate design effort but paid off in maintainability and testability. Producing forecasts that operators could trust meant validating the forecasting approach against historical patterns and presenting results clearly through dashboards.",
+
+    results: "The system gives restaurant operators a clear, data-driven view of their business, combining historical analytics with forward-looking sales forecasts. Its SOLID-based architecture makes the pipeline easy to maintain and extend as new data sources or metrics are added. By packaging insights into BI-ready dashboards, the project bridges the gap between raw operational data and the practical decisions—around inventory, staffing, and strategy—that drive a restaurant's success."
+  },
+
+  // CodeMentor AI - Multi-Agent Codebase Assistant - Project ID: 18
+  18: {
+    overview: "CodeMentor AI is an agentic code intelligence platform that lets developers ask natural-language questions about a codebase and receive accurate, grounded answers in real time. It orchestrates five specialized LangGraph agents—planner, retrieval, analyst, mentor, and memory—behind an interface-driven dependency-injection design spanning 11 FastAPI endpoints. By pairing FAISS vector search with Tree-sitter AST parsing, CodeMentor understands both the semantics and the structure of code, answering queries with p95 latency under 800ms over streaming Server-Sent Events.",
+
+    features: [
+      "Five specialized LangGraph agents (planner, retrieval, analyst, mentor, memory)",
+      "Interface-driven dependency injection across 11 FastAPI endpoints",
+      "FAISS vector search paired with Tree-sitter AST parsing",
+      "Semantic and structural understanding of codebases",
+      "Natural-language codebase queries with grounded answers",
+      "Real-time streaming responses over Server-Sent Events (SSE)",
+      "p95 query latency under 800ms",
+      "Full-stack architecture with FastAPI backend and Next.js frontend",
+      "Prometheus + Grafana instrumentation tracking retrieval precision and latency",
+      "Three data-driven tuning cycles that measurably improved answer relevance",
+      "Containerized with Docker and deployed on Render/Vercel",
+      "CI/CD with GitHub Actions gating merges"
+    ],
+
+    technologies: "CodeMentor AI is built with a FastAPI backend and a Next.js frontend. Its agentic core uses LangGraph to coordinate five specialized agents—planner, retrieval, analyst, mentor, and memory—wired together through an interface-driven dependency-injection design across 11 endpoints. Retrieval combines FAISS vector search (for semantic similarity) with Tree-sitter AST parsing (for precise structural understanding of code), so the system reasons about both meaning and syntax. Answers stream to the client over Server-Sent Events for a responsive experience. The full stack is instrumented with Prometheus and Grafana to track retrieval precision, latency percentiles, and resource utilization; it is containerized with Docker, deployed on Render and Vercel, and gated by GitHub Actions CI/CD.",
+
+    challenges: "Coordinating multiple agents reliably is hard—each agent must contribute without the system descending into incoherent or looping behavior, which the LangGraph orchestration and clear interface boundaries were designed to prevent. Achieving p95 latency under 800ms while running retrieval, AST analysis, and multi-agent reasoning required careful optimization and streaming via SSE. Grounding answers in the actual codebase (rather than hallucinating) demanded combining semantic vector search with structural AST parsing. Improving answer relevance was approached empirically: Prometheus/Grafana instrumentation enabled three data-driven tuning cycles that measurably raised quality.",
+
+    results: "CodeMentor AI answers codebase questions accurately and fast—p95 under 800ms—by combining multi-agent reasoning with hybrid semantic and structural retrieval. The Prometheus/Grafana observability stack made improvement measurable: three tuning cycles produced quantifiable gains in answer relevance. With a production-grade deployment story (Docker, Render/Vercel, GitHub Actions CI/CD) and a clean, DI-driven architecture, the platform demonstrates how agentic AI can be engineered into a reliable, observable, full-stack developer tool."
+  },
+
+  // NexusFlow - AI Assistant for n8n Automation - Project ID: 19
+  19: {
+    overview: "NexusFlow is an integration layer that bridges AI assistants and the n8n workflow-automation platform, letting users build, modify, and manage complex automations through natural language. Instead of manually wiring nodes and configuring triggers, users describe what they want in plain language and NexusFlow translates that intent into working n8n workflows—dramatically lowering the barrier to powerful automation.",
+
+    features: [
+      "Natural-language interface for building n8n workflows",
+      "AI assistant integration bridging conversation and automation",
+      "Automated creation and modification of workflow definitions",
+      "Support for complex, multi-step automation logic",
+      "Reduced barrier to entry for non-expert automation users",
+      "REST API integration with the n8n platform",
+      "Extensible design for new nodes and integrations"
+    ],
+
+    technologies: "NexusFlow is built primarily in JavaScript and integrates with the n8n automation platform through its APIs. An LLM layer interprets natural-language requests and maps them onto n8n's workflow model, generating or editing the node graphs and trigger configurations that define an automation. By acting as a translation layer between human intent and n8n's structured workflow format, NexusFlow lets users orchestrate sophisticated automations conversationally.",
+
+    challenges: "The core challenge was reliably translating ambiguous natural-language requests into the precise, structured workflow definitions that n8n requires—a task where small misinterpretations can break an automation. This demanded careful prompt design and validation of generated workflows. Integrating cleanly with n8n's API and workflow model, while keeping the system extensible to new node types, required a flexible architecture that maps intent to automation primitives.",
+
+    results: "NexusFlow makes powerful workflow automation accessible to a much wider audience by letting users build and manage n8n automations through conversation rather than manual configuration. By bridging AI assistants and the automation platform, it turns natural-language intent into functioning workflows, saving time for experienced users and opening automation up to those without deep n8n expertise."
+  },
+
+  // FormSage - AI Job Application Autofill - Project ID: 20
+  20: {
+    overview: "FormSage is a privacy-first Chrome extension that automatically fills out job application forms, saving applicants from repetitive data entry across countless portals. It analyzes the structure of each form's DOM, matches fields against the user's stored profile, and falls back to an optional LLM only when a field can't be confidently mapped—keeping the experience fast, accurate, and privacy-respecting by default.",
+
+    features: [
+      "Automatic autofill of job application forms",
+      "DOM analysis to detect and classify form fields",
+      "Profile-based field matching for accurate completion",
+      "Optional LLM fallback for ambiguous or unmapped fields",
+      "Privacy-first design keeping user data local by default",
+      "Works across diverse job application portals",
+      "Reduces repetitive manual data entry",
+      "Lightweight Chrome extension architecture"
+    ],
+
+    technologies: "FormSage is built as a Chrome extension in JavaScript. Its core engine performs DOM analysis to identify form fields and infer their purpose, then matches them against the user's stored profile to fill them in automatically. When a field can't be confidently classified through heuristics alone, an optional LLM fallback steps in to interpret it. The architecture is privacy-first: profile data stays local and the LLM is invoked only as a fallback, minimizing external data exposure.",
+
+    challenges: "Job application forms vary enormously in structure, naming, and layout, making reliable field detection difficult—addressed through robust DOM analysis combined with profile matching. Balancing accuracy with privacy was a key design tension: rather than routing all data through an external model, FormSage keeps data local and uses an LLM only as a targeted fallback for fields it can't otherwise resolve. Ensuring the extension stayed lightweight and responsive across many different sites required efficient, defensive DOM handling.",
+
+    results: "FormSage meaningfully reduces the tedium of job hunting by autofilling applications accurately across diverse portals, while its privacy-first architecture keeps user data local by default. The combination of DOM analysis, profile matching, and an optional LLM fallback delivers strong coverage without sacrificing privacy or performance—demonstrating a practical, user-respecting application of AI to a real everyday pain point."
+  },
+
+  // AI Assistant Browser Extension - Project ID: 21
+  21: {
+    overview: "This project is a high-performance AI assistant delivered as a browser extension, designed for low-latency, conversational interactions directly in the browser. Backed by a FastAPI service, it streams responses token-by-token using Server-Sent Events (SSE), so users see answers appear in real time rather than waiting for a complete response—creating a fast, fluid assistant experience.",
+
+    features: [
+      "AI assistant accessible directly within the browser",
+      "FastAPI backend for high-performance request handling",
+      "Real-time token streaming via Server-Sent Events (SSE)",
+      "Low-latency, responsive conversational experience",
+      "Streaming responses that appear progressively as generated",
+      "Lightweight browser extension architecture",
+      "Clean separation between extension frontend and API backend"
+    ],
+
+    technologies: "The extension frontend is built in JavaScript and communicates with a FastAPI backend that handles AI requests. Responses are streamed token-by-token using Server-Sent Events (SSE), a lightweight, efficient protocol for server-to-client streaming, so generated text appears progressively in the UI. This architecture cleanly separates the browser extension from the API service while delivering the real-time responsiveness users expect from a modern AI assistant.",
+
+    challenges: "Delivering a genuinely real-time experience required implementing token streaming end-to-end—from the FastAPI backend through SSE to the extension UI—and handling partial responses gracefully. Keeping latency low while maintaining a clean separation between the extension and the backend demanded an efficient request/streaming path. Building within the constraints of a browser extension, while integrating smoothly with a streaming API, required careful frontend engineering.",
+
+    results: "The result is a fast, fluid AI assistant available right in the browser, where streamed token-by-token responses make interactions feel immediate and natural. The FastAPI-plus-SSE architecture demonstrates an effective pattern for low-latency AI applications, combining a performant backend with real-time streaming and a lightweight extension frontend."
+  },
+
+  // Future Lens - LLM Hidden State Study - Project ID: 22
+  22: {
+    overview: "Future Lens is an in-progress research study investigating a fundamental question about large language models: do the hidden states inside an LLM already encode predictions about future tokens, beyond just the immediate next one? Reproducing and extending prior interpretability work, the study probes the internal representations of transformer models to test whether information about upcoming tokens is linearly decodable from intermediate layers, benchmarked across six different transformer models. This project is currently in progress.",
+
+    features: [
+      "Investigates whether LLM hidden states predict future tokens",
+      "Reproduction and extension of prior interpretability research",
+      "Benchmarked across 6 different transformer models",
+      "Probing of intermediate-layer representations",
+      "Analysis of how predictive information is distributed across layers",
+      "Rigorous, comparative experimental methodology",
+      "Contributes to mechanistic interpretability of LLMs",
+      "Status: in progress"
+    ],
+
+    technologies: "Future Lens is implemented in Python using PyTorch and the Transformers ecosystem. The study extracts and analyzes hidden states from six transformer models, applying probing techniques to test whether information about future tokens is recoverable from intermediate representations. The experimental setup emphasizes reproducibility and fair comparison across models, drawing on established interpretability methods to evaluate how and where predictive information is encoded.",
+
+    challenges: "Interpretability research demands methodological rigor: distinguishing genuine signal in hidden states from artifacts requires carefully designed probes and controls. Benchmarking consistently across six different transformer architectures—each with its own dimensions and conventions—adds engineering and experimental complexity. Reproducing prior results faithfully, as a foundation for new findings, requires precise replication of methods. As an in-progress study, results are still being collected and validated.",
+
+    results: "As an in-progress research effort, Future Lens aims to clarify whether and how large language models internally anticipate future tokens within their hidden states—an open question in mechanistic interpretability. By reproducing prior work and extending it across six transformer models, the study seeks to produce comparative, reproducible evidence about how predictive information is structured inside LLMs. Findings will be updated as the research progresses."
+  },
+
+  // New Language Tutor AI - Project ID: 23
+  23: {
+    overview: "New Language Tutor AI is an LLM-powered backend service that gives language learners structured, actionable feedback on the sentences they write. A learner submits a sentence in any of 10+ target languages and the service returns a grammatically corrected version, a list of categorized errors with learner-friendly explanations in their native language, and a CEFR difficulty rating (A1–C2). Built as a production-ready FastAPI service, it pairs careful prompt engineering with resilience features like caching and retry logic to deliver fast, reliable, and cost-aware feedback.",
+
+    features: [
+      "Structured grammar feedback with a corrected version of the learner's sentence",
+      "Categorized error detection (conjugation, gender agreement, particles, and more)",
+      "Learner-friendly explanations written in the learner's native language",
+      "Automatic CEFR difficulty rating (A1–C2) for each sentence",
+      "Support for 10+ languages across Latin, CJK, Cyrillic, and Arabic scripts",
+      "Structured JSON output enforced via OpenAI JSON mode and Pydantic models",
+      "LRU caching keyed by sentence and language pair to cut latency and cost",
+      "Retry logic with exponential backoff for transient failures",
+      "Timeout enforcement to stay within strict response-time constraints",
+      "Comprehensive test suite (unit, integration, and schema tests)",
+      "Dockerized with docker-compose and health checks for easy deployment"
+    ],
+
+    technologies: "The service is built with FastAPI and runs on Uvicorn, using an async AsyncOpenAI client to call GPT-4o-mini for corrections. Pydantic models and JSON Schema enforce strict request/response validation, with enums for error categories and CEFR levels. Resilience is built in: a thread-safe LRU cache (keyed by a SHA-256 hash of sentence, target language, and native language) reduces repeat calls, Tenacity provides retry-with-backoff on transient errors, and httpx-level timeouts keep responses within budget. Output sanitization maps invalid values to safe defaults. The system is containerized with Docker and docker-compose (with health checks) and configured entirely through environment variables.",
+
+    challenges: "Reliable structured output from an LLM is hard—free-form responses break downstream parsing. This was solved with OpenAI's JSON mode, Pydantic validation, and an output-sanitization layer that gracefully handles malformed responses. Delivering accurate, native-language explanations across very different scripts (Latin, CJK, Cyrillic, Arabic) required careful prompt design with few-shot examples and was verified through integration tests. Meeting a strict response-time budget while controlling cost drove the choice of GPT-4o-mini plus LRU caching and timeout enforcement. Ensuring correctness without burning API credits in CI required a mocked unit-test layer alongside real integration tests.",
+
+    results: "New Language Tutor AI delivers fast, structured, and trustworthy language feedback as a deployable production service. The combination of JSON-mode prompting, Pydantic validation, and output sanitization makes responses consistently parseable, while caching, retries, and timeouts keep the service responsive and resilient under real-world conditions. Backed by a comprehensive test suite spanning unit, integration, and schema layers, and packaged with Docker for easy deployment, the project demonstrates end-to-end LLM application engineering—from prompt design to cost-aware, observable production deployment."
+  },
+
+  // Offline ChatGPT - Local LLM Chat - Project ID: 24
+  24: {
+    overview: "Offline ChatGPT (OfflineGPT) is a ChatGPT-inspired web interface that runs AI conversations entirely on the user's own machine. By connecting to a locally running Ollama server, it lets users chat with open models like Gemma, Code Llama, and CodeGemma with complete privacy—no cloud dependency, no subscriptions, and no data leaving the device. It demonstrates a practical understanding of local model serving and the inference infrastructure behind LLM applications.",
+
+    features: [
+      "Fully local, private chat powered by Ollama (no cloud, no subscription)",
+      "Support for multiple models (Gemma, Code Llama, CodeGemma, and more)",
+      "Dynamic model switching without restarting the app",
+      "Syntax-highlighted code blocks with one-click copy",
+      "Chat history export as text files",
+      "Light and dark theme toggle",
+      "Message timestamps and typing indicators",
+      "Keyboard shortcuts (Enter to send, Shift+Enter for newline)",
+      "Clean, responsive ChatGPT-style interface",
+      "100% on-device data privacy"
+    ],
+
+    technologies: "The interface is built with vanilla HTML, CSS, and JavaScript—no heavy framework—keeping it lightweight and fast. It communicates with a locally running Ollama server through its REST API (localhost:11434), sending prompts and streaming back model responses. Because Ollama hosts the models locally, any Ollama-compatible model (Gemma, Code Llama, CodeGemma, etc.) can be selected and swapped on the fly, and all conversation data stays entirely on the user's machine.",
+
+    challenges: "Delivering a polished, ChatGPT-like experience with only vanilla JavaScript meant carefully building features like syntax highlighting, code copying, theme switching, and typing indicators from the ground up. Integrating cleanly with Ollama's local REST API required handling streaming responses and dynamic model selection gracefully. Ensuring the app stayed fully offline and private—while remaining responsive and user-friendly—was a central design goal.",
+
+    results: "Offline ChatGPT gives developers, students, and privacy-conscious users a free, local alternative to cloud chatbots, with the convenience features people expect from a modern chat UI. It's especially useful for offline coding assistance and for experimenting with open LLMs without subscriptions. The project showcases hands-on experience with local LLM serving via Ollama and the practical engineering of a responsive, feature-complete chat interface."
+  },
+
+  // CaptionCraft AI - Image Caption Generator - Project ID: 25
+  25: {
+    overview: "CaptionCraft AI is a deep learning image captioning system that automatically generates natural-language descriptions for images. It combines a convolutional neural network for visual understanding with a recurrent network for language generation: a pre-trained VGG16 encoder extracts image features, and an LSTM decoder produces a caption word-by-word. The model is trained on the Flickr8k dataset (8,000 images, each with five captions).",
+
+    features: [
+      "Automatic natural-language caption generation for images",
+      "VGG16 CNN encoder for rich visual feature extraction",
+      "LSTM decoder for word-by-word caption generation",
+      "Fusion of image and text features for contextually relevant captions",
+      "Trained and evaluated on the Flickr8k dataset",
+      "BLEU-1 score of 0.544 and BLEU-2 of 0.319",
+      "Built with TensorFlow and Keras",
+      "Roadmap for beam search and larger datasets (MSCOCO, Flickr30k)"
+    ],
+
+    technologies: "CaptionCraft AI is built with TensorFlow and Keras. A pre-trained VGG16 network serves as the CNN encoder, extracting high-level visual features from each image, while an LSTM network acts as the decoder that generates the caption sequence one word at a time. The image and text feature representations are fused so the language model stays grounded in the visual content. Supporting libraries include NumPy and Matplotlib for data handling and visualization, and NLTK for text processing and BLEU-score evaluation. The model was developed and trained in a Jupyter/Kaggle environment on the Flickr8k dataset.",
+
+    challenges: "Image captioning requires bridging two very different modalities—vision and language—which makes the encoder/decoder fusion the core challenge, addressed by pairing VGG16 features with an LSTM sequence generator. Training on Flickr8k required careful preprocessing of both images and the five captions per image, plus tokenization and sequence padding for the language model. Evaluating open-ended generated text is inherently difficult; BLEU-1 and BLEU-2 scores were used to quantify caption quality objectively.",
+
+    results: "The model successfully generates captions that align with image content, achieving a BLEU-1 score of 0.544 and BLEU-2 of 0.319 on Flickr8k. CaptionCraft AI demonstrates a solid grasp of the classic CNN-plus-LSTM captioning architecture and multimodal deep learning. Planned enhancements include scaling to larger datasets (MSCOCO, Flickr30k), adding richer evaluation metrics (METEOR, ROUGE, CIDEr), and incorporating beam search to improve caption fluency."
   }
 };

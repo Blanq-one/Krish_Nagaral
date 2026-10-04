@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, User, Code, FolderOpen, BookOpen, Mail, X, Briefcase } from 'lucide-react';
+import { Home, User, Code, FolderOpen, BookOpen, Mail, X, Briefcase, Award } from 'lucide-react';
 import { useEffect } from 'react';
 
 const sidebarItems = [
@@ -9,6 +9,7 @@ const sidebarItems = [
   { icon: Briefcase, label: 'Experience', href: '#experience' },
   { icon: FolderOpen, label: 'Projects', href: '#projects' },
   { icon: BookOpen, label: 'Publications', href: '#publications' },
+  { icon: Award, label: 'Certifications', href: '#certifications' },
   { icon: Mail, label: 'Contact', href: '#contact' },
 ];
 
@@ -68,7 +69,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
         <div className="p-4 border-t border-gray-800">
           <p className="text-xs text-gray-500 text-center">
-            © 2024 Krish Nagaral
+            © 2026 Krish Nagaral
           </p>
         </div>
       </motion.aside>
@@ -126,7 +127,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
               <div className="p-4 border-t border-gray-800">
                 <p className="text-xs text-gray-500 text-center">
-                  © 2024 Krish Nagaral
+                  © 2026 Krish Nagaral
                 </p>
               </div>
             </motion.aside>

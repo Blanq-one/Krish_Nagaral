@@ -9,11 +9,12 @@ const Experience = () => {
       title: "AI Research & Tool Developer Intern",
       company: "Coutloot & Flyads.ai",
       location: "Mumbai",
-      period: "May 2025 - Aug 2025",
+      period: "Aug 2024 - Aug 2025",
       achievements: [
-        "Built AI automation tools increasing workflow efficiency by 85%, fine-tuned LLaMA/Gemma models using LoRA, achieving 92% performance improvement",
-        "Developed RAG pipelines using LangChain for context-aware automation with 97% accuracy",
-        "Researched, trained, and deployed AI cloning models for human avatar generation, integrated into ad creation pipelines"
+        "Fine-tuned LLaMA and Gemma models using LoRA, achieving a 92% accuracy improvement on domain-specific tasks",
+        "Deployed Docker-based FastAPI inference services supporting 5,000+ concurrent requests, with optimized batching strategies and GPU utilization driving major latency reduction",
+        "Built RAG pipelines using LangChain for context-aware automation, boosting workflow efficiency by 85%",
+        "Researched, trained, and deployed AI cloning models for human avatar generation, integrated into the ad-creation pipeline"
       ]
     },
     {

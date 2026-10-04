@@ -9,6 +9,7 @@ import Skills from './sections/Skills';
 import Experience from './sections/Experience';
 import Projects from './sections/Projects';
 import Publications from './sections/Publications';
+import Certifications from './sections/Certifications';
 import Contact from './sections/Contact';
 import ProjectDetail from './pages/ProjectDetail';
 
@@ -93,9 +94,10 @@ const AppContent = () => {
                 <Hero />
                 <About />
                 <Skills />
-                <Projects />
                 <Experience />
+                <Projects />
                 <Publications />
+                <Certifications />
                 <Contact />
                 <Footer />
               </main>

@@ -17,8 +17,9 @@ const Projects = () => {
           className="space-y-12"
         >
           <CarouselRow title="AI/ML Projects" projects={projects.aiMl} />
-          <CarouselRow title="Cloud / DevOps" projects={projects.cloudDevOps} />
+          <CarouselRow title="DevOps / Cloud" projects={projects.cloudDevOps} />
           <CarouselRow title="Computer Vision" projects={projects.computerVision} />
+          <CarouselRow title="Research" projects={projects.research} />
         </motion.div>
       </div>
     </section>

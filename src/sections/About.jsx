@@ -15,21 +15,23 @@ const About = () => {
           className="bg-spotify-grey rounded-lg p-8 md:p-12"
         >
           <p className="text-gray-200 text-lg leading-relaxed mb-6">
-            I am an AI/ML Engineer, Cloud Engineer, and published researcher with experience building production-grade AI systems, 
-            fine-tuning large language models, and deploying scalable solutions on the cloud. My work focuses on LLM optimization, 
-            RAG pipelines, real-time inference systems, and high-performance ML architectures.
+            I am an AI/ML Engineer and published researcher based in Boston, MA, with experience building production-grade AI
+            systems, fine-tuning large language models, and deploying scalable solutions on the cloud. My work spans agentic
+            AI and multi-agent systems, RAG pipelines, reinforcement learning, LLM optimization, and the MLOps tooling
+            (MLflow, Prometheus, Grafana, gRPC) that takes models from notebook to reliable, observable production services.
           </p>
           <p className="text-gray-200 text-lg leading-relaxed mb-6">
-            As an MSCS student at Northeastern University, I've gained hands-on industry experience through internships at 
-            Coutloot and Flyads.ai, where I built AI automation tools that boosted workflow efficiency by 85% and fine-tuned 
-            LLaMA/Gemma models to achieve a 92% performance improvement. I specialize in Computer Vision, NLP, Deep Learning, 
-            and Cloud Computing (AWS-certified).
+            I'm currently an MS in Computer Science student at Northeastern University (AI &amp; ML specialization, 2025–2027),
+            building on my BTech in Computer Science from Vellore Institute of Technology. Through internships at Coutloot and
+            Flyads.ai, I fine-tuned LLaMA/Gemma models for a 92% accuracy improvement and deployed Docker-based FastAPI
+            inference services handling 5,000+ concurrent requests. I'm AWS-certified (Solutions Architect, AI Practitioner,
+            and Machine Learning Associate) and specialize in Computer Vision, NLP, Deep Learning, and Cloud Computing.
           </p>
           <p className="text-gray-200 text-lg leading-relaxed">
-            I also have a strong background in cloud infrastructure design, containerized deployments, and distributed systems, 
-            and I am actively seeking roles as an AI/ML Engineer, Cloud Engineer, or Applied Scientist. My projects span 
-            explainable AI for healthcare, legal document intelligence, multimodal emotion recognition, and vision-assistive 
-            technologies—all focused on real-world impact and engineering excellence.
+            I have a strong background in cloud infrastructure design, containerized deployments, and distributed systems, and
+            I'm actively seeking roles as an AI/ML Engineer, Cloud Engineer, or Applied Scientist. My projects span agentic
+            codebase assistants, reinforcement learning for race strategy, RAG document intelligence, explainable AI for
+            healthcare, and vision-assistive technologies—all focused on real-world impact and engineering excellence.
           </p>
         </motion.div>
 
@@ -45,16 +47,16 @@ const About = () => {
             <p className="text-gray-400">ML Model Accuracy</p>
           </div>
           <div className="bg-spotify-grey rounded-lg p-6 text-center">
-            <h3 className="text-3xl font-bold text-spotify-green mb-2">85%</h3>
-            <p className="text-gray-400">Workflow Efficiency Gain</p>
+            <h3 className="text-3xl font-bold text-spotify-green mb-2">20+</h3>
+            <p className="text-gray-400">Projects Built</p>
           </div>
           <div className="bg-spotify-grey rounded-lg p-6 text-center">
-            <h3 className="text-3xl font-bold text-spotify-green mb-2">9+</h3>
-            <p className="text-gray-400">Production Projects</p>
+            <h3 className="text-3xl font-bold text-spotify-green mb-2">5K+</h3>
+            <p className="text-gray-400">Concurrent Requests Served</p>
           </div>
           <div className="bg-spotify-grey rounded-lg p-6 text-center">
-            <h3 className="text-3xl font-bold text-spotify-green mb-2">AWS</h3>
-            <p className="text-gray-400">Certified Professional</p>
+            <h3 className="text-3xl font-bold text-spotify-green mb-2">8x</h3>
+            <p className="text-gray-400">Certifications (AWS &amp; AI)</p>
           </div>
         </motion.div>
       </div>
