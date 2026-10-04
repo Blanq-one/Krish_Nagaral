@@ -1,15 +1,4 @@
-// Helper function to get correct path for public assets
-// Public folder files are served from root in both dev and prod
-// But with base path, they need to be prefixed with base path
-const getPublicPath = (path) => {
-  // Remove leading slash if present
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  // Use BASE_URL which includes the base path
-  // BASE_URL is "/portfolio/" in production and development when base is set
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  // Ensure baseUrl ends with / and path doesn't start with /
-  return baseUrl + cleanPath;
-};
+import { getPublicPath } from '../utils/publicPath';
 
 export const projects = {
   // Ordered by priority. Prioritized projects first, then remaining

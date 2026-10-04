@@ -1,12 +1,6 @@
 import { motion } from 'framer-motion';
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
-
-// Helper function to get correct path for public assets
-const getPublicPath = (path) => {
-  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  return baseUrl + cleanPath;
-};
+import { getPublicPath } from '../utils/publicPath';
 
 const Hero = () => {
   const scrollToNext = () => {
