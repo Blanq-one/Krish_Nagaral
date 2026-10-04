@@ -128,63 +128,6 @@ export const projectDetails = {
     results: "By integrating GAN-based data augmentation with Random Forest classification, this pipeline offers a scalable and effective solution for automated fake account detection. The system provides valuable insights for social media platforms seeking to maintain authenticity and reduce bot-driven misinformation. The combination of traditional machine learning with advanced deep learning techniques demonstrates how hybrid approaches can overcome common challenges in real-world applications. The extensible architecture allows for future enhancements using ensemble models or deep learning approaches, making it adaptable to evolving threats and detection requirements. This project showcases the practical application of machine learning and GANs in addressing cybersecurity and social media integrity challenges, providing a foundation for building more sophisticated detection systems."
   },
 
-  // AI-Powered SaaS Platform - Project ID: 10
-  10: {
-    overview: "This is a professional AI-powered SaaS platform tailored for marketers and advertisers to effortlessly create high-quality advertising creatives. Combining advanced AI generation technologies with a flexible hybrid monetization model (subscription + credits), the platform offers diverse content types including static images, animated visuals, video morphing, contextual photos, AI-powered creative scoring, vector graphics, and branded creative sets. Built on a robust technology stack featuring FastAPI backend and Next.js frontend, the platform delivers a seamless user experience with secure authentication, personal dashboards, transaction histories, and subscription management, architected for scalability and reliability.",
-    
-    features: [
-      "AI-powered advertising creative generation with diverse content types",
-      "Static images, animated visuals, and video morphing capabilities",
-      "Contextual photos and AI-powered creative scoring",
-      "Vector graphics and branded creative sets",
-      "Hybrid monetization model (subscription + credits)",
-      "Secure authentication via Telegram, Google, Yandex, and more",
-      "Personal dashboards for users and full CRM system for administrators",
-      "Transaction histories and subscription management",
-      "Billing analytics and dynamic pricing controls",
-      "Content moderation tools for administrators",
-      "AI fusion capabilities combining multiple generation methods",
-      "Scalable architecture with containerization and Kubernetes orchestration",
-      "CI/CD pipelines for smooth updates and deployments",
-      "Planned features: real AI integrations, real-time notifications, and advanced analytics"
-    ],
-    
-    technologies: "Built on a robust technology stack featuring FastAPI backend and Next.js frontend, the platform delivers a seamless user experience with secure authentication capabilities supporting Telegram, Google, Yandex, and more. Designed for scalability and reliability, the service uses containerization and Kubernetes orchestration on Yandex Cloud, ensuring high availability and efficient resource management. CI/CD pipelines enable smooth updates and deployments, maintaining service continuity. The platform leverages advanced AI generation technologies for creating diverse content types, with AI fusion capabilities that allow combining multiple generation methods to produce unique creatives. The architecture supports both user-facing features (personal dashboards, transaction histories) and administrative tools (CRM system, billing analytics, dynamic pricing controls, content moderation).",
-    
-    challenges: "One of the primary challenges was designing a scalable architecture that could handle high traffic loads while maintaining performance and reliability. This was addressed through containerization and Kubernetes orchestration on Yandex Cloud, enabling auto-scaling and efficient resource management. Another significant challenge was implementing a flexible hybrid monetization model that supports both subscriptions and credits, requiring careful design of billing systems and transaction processing. Ensuring secure authentication across multiple providers (Telegram, Google, Yandex) required robust integration and security measures. Managing diverse AI generation methods and combining them effectively (AI fusion) required careful architecture to ensure seamless user experience. Implementing comprehensive administrative tools while maintaining separation from user-facing features required careful system design. CI/CD pipeline implementation needed to ensure zero-downtime deployments for a production SaaS platform.",
-    
-    results: "This SaaS solution empowers marketers to accelerate campaign creation, optimize ad performance, and manage budgets efficiently—all while maintaining full control and security. The platform successfully combines advanced AI generation technologies with flexible monetization, providing value to both end users and administrators. With planned features like real AI integrations, real-time notifications, and advanced analytics, the platform is positioned for continued growth and enhancement. The scalable architecture ensures the platform can handle growing user bases and increasing traffic demands. By offering diverse content generation types and AI fusion capabilities, the platform provides marketers with powerful tools to create high-quality advertising creatives efficiently. The comprehensive administrative tools enable platform operators to manage the service effectively, analyze performance, and optimize pricing dynamically."
-  },
-
-  // AI-Powered Cloud Security - Project ID: 11
-  11: {
-    overview: "This is an advanced, AI-driven biometric authentication platform designed to enhance security by replacing traditional passwords with seamless facial recognition. Leveraging cutting-edge artificial intelligence for facial feature extraction and cloud-native technologies, this system offers secure, scalable, and user-friendly authentication ideal for modern organizations and websites. Built on a Python Flask backend and integrated with Google Firebase cloud services, FaceCrypt-Cloud stores encrypted biometric data and user information in a centralized, real-time database, ensuring high availability and robust data management. The AI-powered facial recognition module uses deep learning models (via face_recognition and dlib) to accurately encode, detect, and verify users' faces even under challenging conditions such as poor lighting or multiple faces in one image.",
-    
-    features: [
-      "Biometric passwordless login using facial recognition technology",
-      "Cloud-enabled user management with Firebase Firestore and Storage",
-      "Comprehensive admin dashboard for user management and monitoring",
-      "Detailed audit logs with timestamps and IP tracking",
-      "Automated security controls with account blocking after failed attempts",
-      "Brute-force attack mitigation with temporary and permanent blocks",
-      "Robust face detection supporting live camera capture and photo uploads",
-      "Error handling for detection failures, network issues, and access denials",
-      "Scalable and modular design for easy extensibility",
-      "Support for additional biometric factors (voice, fingerprint)",
-      "Enterprise integration capabilities",
-      "Encrypted biometric data storage (facial encodings only, not raw images)",
-      "Strict access controls via Firebase security rules",
-      "Secure credential management with environment variables",
-      "Privacy compliance with user consent requirements"
-    ],
-    
-    technologies: "Built on a Python 3.10 Flask backend, the system integrates with Google Firebase cloud services for scalable, real-time data management. The AI-powered facial recognition module leverages face_recognition and dlib libraries, along with OpenCV, for accurate face detection and encoding. Firebase Firestore (NoSQL) provides the database layer for storing user data and facial encodings, while Firebase Storage handles secure face encoding storage. The frontend is built with responsive HTML5, CSS3, Bootstrap, and JavaScript for a modern user experience. Security is ensured through JWT authentication, encrypted data storage, rate limiting, and comprehensive audit logging. All sensitive credentials are managed securely with environment variables, and Firebase security rules enforce strict access controls.",
-    
-    challenges: "One of the primary challenges was ensuring accurate facial recognition under varying conditions such as poor lighting, different angles, or multiple faces in an image. This was addressed by leveraging deep learning models from face_recognition and dlib libraries, which are trained to handle these challenging scenarios. Another significant challenge was implementing secure biometric data storage while maintaining privacy compliance - this was solved by storing only facial encodings (not raw images) and encrypting all biometric data. Implementing robust security controls to mitigate brute-force attacks required careful design of rate limiting and account blocking mechanisms. Ensuring scalability with cloud-native technologies required careful architecture using Firebase services. Building a comprehensive admin dashboard with detailed audit logging required careful design of the data model and access controls. Managing secure credential storage and environment variables required careful deployment practices.",
-    
-    results: "FaceCrypt-Cloud provides a secure, scalable, and user-friendly alternative to traditional password-based authentication, making it ideal for modern organizations and websites. The system successfully combines advanced AI facial recognition with cloud-native technologies, offering seamless authentication while maintaining high security standards. With planned features including multi-factor authentication, additional biometric modalities, advanced analytics, and API integrations, the platform is positioned for continued enhancement and enterprise adoption. The encrypted biometric data storage and strict access controls ensure privacy compliance and user trust. The modular design allows for easy extensibility to support additional authentication methods, making it adaptable to evolving security requirements. The comprehensive admin dashboard and audit logging provide organizations with the visibility and control needed to maintain security standards."
-  },
-
   // Pneumonia Detection AI - Project ID: 6
   6: {
     overview: "This project builds a robust pneumonia detection model for chest X-ray images using transfer learning with a ResNet backbone from torchvision, fine-tuned on the Kaggle Chest X-Ray dataset. The architecture follows MVC and SOLID principles, ensuring a clean separation between data handling, model logic, orchestration, and user interfaces for maintainability and scalability. The system provides comprehensive evaluation metrics, explainability through Grad-CAM heatmaps, and multiple user interfaces including a Streamlit-based UI and an optional FastAPI endpoint for programmatic inference.",
