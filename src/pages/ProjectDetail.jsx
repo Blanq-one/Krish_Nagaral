@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
-import { projects } from '../data/projects';
+import { getProjectById } from '../data/projects';
 import { projectDetails } from '../data/projectDetails';
 
 const ProjectDetail = () => {
@@ -15,13 +15,7 @@ const ProjectDetail = () => {
   }, [id]);
 
   // Find the project from all categories
-  const allProjects = [
-    ...projects.aiMl,
-    ...projects.computerVision,
-    ...projects.cloudDevOps,
-    ...projects.research
-  ];
-  const project = allProjects.find(p => p.id === parseInt(id));
+  const project = getProjectById(id);
 
   if (!project) {
     return (

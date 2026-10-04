@@ -222,3 +222,19 @@ export const projects = {
     }
   ]
 };
+
+// Carousel rows, in display order. Adding a category = add a key to
+// `projects` above and an entry here.
+export const projectCategories = [
+  { key: 'aiMl', title: 'AI/ML Projects' },
+  { key: 'cloudDevOps', title: 'DevOps / Cloud' },
+  { key: 'computerVision', title: 'Computer Vision' },
+  { key: 'research', title: 'Research' },
+];
+
+export const getAllProjects = () =>
+  projectCategories.flatMap(({ key }) => projects[key] ?? []);
+
+// `id` may be the string from the route param, so compare as numbers
+export const getProjectById = (id) =>
+  getAllProjects().find((p) => p.id === Number(id));

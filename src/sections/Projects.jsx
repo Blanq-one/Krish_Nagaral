@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import SectionTitle from '../components/SectionTitle';
 import CarouselRow from '../components/CarouselRow';
-import { projects } from '../data/projects';
+import { projects, projectCategories } from '../data/projects';
 
 const Projects = () => {
   return (
@@ -16,10 +16,9 @@ const Projects = () => {
           transition={{ duration: 0.6 }}
           className="space-y-12"
         >
-          <CarouselRow title="AI/ML Projects" projects={projects.aiMl} />
-          <CarouselRow title="DevOps / Cloud" projects={projects.cloudDevOps} />
-          <CarouselRow title="Computer Vision" projects={projects.computerVision} />
-          <CarouselRow title="Research" projects={projects.research} />
+          {projectCategories.map(({ key, title }) => (
+            <CarouselRow key={key} title={title} projects={projects[key]} />
+          ))}
         </motion.div>
       </div>
     </section>
