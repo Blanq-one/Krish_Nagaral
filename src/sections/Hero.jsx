@@ -79,7 +79,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-[100svh] flex items-center justify-center px-6 pt-[120px] pb-24 [@media(max-height:860px)]:pt-[104px] [@media(max-height:860px)]:pb-12 overflow-hidden">
+    <section id="hero" className="relative min-h-[100svh] flex items-center justify-center px-6 pt-[120px] pb-24 [@media(min-height:801px)_and_(max-height:940px)]:pt-[104px] [@media(min-height:801px)_and_(max-height:940px)]:pb-12 [@media(max-height:800px)]:pt-[84px] [@media(max-height:800px)]:pb-6 overflow-hidden">
       {/* Faint neural net pattern background - 20% more visible */}
       <div className="absolute inset-0 opacity-[0.036] pointer-events-none overflow-hidden">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -120,7 +120,7 @@ const Hero = () => {
           {...rise(0)}
           src={getPublicPath('pfp.png')}
           alt="Krish Nagaral"
-          className="mx-auto mb-6 h-24 w-24 rounded-full border border-[color:var(--stroke)] object-cover object-top md:h-[120px] md:w-[120px]"
+          className="mx-auto mb-6 [@media(max-height:800px)]:mb-4 h-24 w-24 rounded-full border border-[color:var(--stroke)] object-cover object-top md:h-[120px] md:w-[120px]"
         />
         <motion.h1
           {...rise(1)}
@@ -131,7 +131,7 @@ const Hero = () => {
 
         <motion.p
           {...rise(2)}
-          className="mx-auto mt-7 max-w-[34ch] text-[clamp(1.15rem,2.2vw,1.55rem)] font-medium leading-[1.35] tracking-[-0.015em] text-[#d2d2d7]"
+          className="mx-auto mt-7 [@media(max-height:800px)]:mt-5 max-w-[34ch] text-[clamp(1.15rem,2.2vw,1.55rem)] font-medium leading-[1.35] tracking-[-0.015em] text-[#d2d2d7]"
         >
           AI/ML Engineer | Published Researcher | Cloud Computing Specialist
         </motion.p>
@@ -145,7 +145,7 @@ const Hero = () => {
         </motion.p>
 
         {showPlay && (
-          <motion.div {...rise(4)} className="mt-[34px] flex justify-center">
+          <motion.div {...rise(4)} className="mt-[34px] [@media(max-height:800px)]:mt-[22px] flex justify-center">
             <button
               ref={playRef}
               type="button"
@@ -159,7 +159,7 @@ const Hero = () => {
           </motion.div>
         )}
 
-        <motion.div {...rise(5)} className="mt-[34px] flex flex-wrap justify-center gap-3">
+        <motion.div {...rise(5)} className="mt-[34px] [@media(max-height:800px)]:mt-[18px] flex flex-wrap justify-center gap-3">
           <a
             href="https://github.com/Blanq-one"
             target="_blank"
@@ -190,7 +190,7 @@ const Hero = () => {
           </a>
         </motion.div>
 
-        <motion.div {...rise(6)} className="mt-7 flex justify-center">
+        <motion.div {...rise(6)} className="mt-7 [@media(max-height:800px)]:mt-3 flex justify-center">
           <button
             type="button"
             onClick={scrollToNext}
