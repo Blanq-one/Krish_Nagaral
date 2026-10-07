@@ -1,6 +1,8 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
 import { getPublicPath } from '../utils/publicPath';
+import { playerStore, prefersReducedMotion, usePlayerState } from '../components/playerStore';
 
 // Staggered rise on load: each hero row fades up 90ms after the previous one
 const rise = (i) => ({
@@ -16,7 +18,59 @@ const blobs = [
   { className: 'left-[42%] top-[32%] h-[420px] w-[420px] bg-[rgba(59,130,246,0.10)]', to: { x: -60, y: -50, scale: 1.15 }, duration: 38 },
 ];
 
+const PlayIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" /></svg>
+);
+
 const Hero = () => {
+  const playRef = useRef(null);
+  const born = usePlayerState((s) => s.born);
+  const reduceMotion = useReducedMotion();
+  // The pill leaves the layout once the player has been started from here
+  const showPlay = !born && !reduceMotion;
+
+  // Morph the pill into the floating player, then start the tour
+  const handlePlay = () => {
+    const player = playerStore.controller;
+    const pill = playRef.current;
+    if (!player || !pill) return;
+    if (player.isOn() || prefersReducedMotion()) {
+      playerStore.set({ born: true });
+      player.refresh();
+      player.startTour();
+      return;
+    }
+
+    const from = pill.getBoundingClientRect();
+    const bar = player.getBar();
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
+    const width = Math.min(560, vw - 20);
+    const height = bar.offsetHeight;
+    const bottom = parseFloat(getComputedStyle(bar).bottom) || 14;
+
+    const ghost = document.createElement('div');
+    ghost.className = 'mp-ghost';
+    ghost.innerHTML =
+      '<span class="mp-ghost-content"><span class="pp-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span><span>Play portfolio</span></span>';
+    document.body.appendChild(ghost);
+    pill.style.visibility = 'hidden';
+
+    const morph = ghost.animate(
+      [
+        { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px`, borderRadius: '34px' },
+        { left: `${(vw - width) / 2}px`, top: `${vh - bottom - height}px`, width: `${width}px`, height: `${height}px`, borderRadius: '30px' },
+      ],
+      { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' }
+    );
+    ghost.firstChild.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, fill: 'forwards' });
+    morph.onfinish = () => {
+      player.arrive();
+      ghost.remove();
+      player.startTour();
+    };
+  };
+
   const scrollToNext = () => {
     const aboutSection = document.querySelector('#about');
     if (aboutSection) {
@@ -90,7 +144,22 @@ const Hero = () => {
           Expertise in LLM optimization, RAG pipelines, and real-time AI applications.
         </motion.p>
 
-        <motion.div {...rise(4)} className="mt-[34px] flex flex-wrap justify-center gap-3">
+        {showPlay && (
+          <motion.div {...rise(4)} className="mt-[34px] flex justify-center">
+            <button
+              ref={playRef}
+              type="button"
+              onClick={handlePlay}
+              className="play-pill"
+              aria-label="Play portfolio tour"
+            >
+              <span className="pp-circle"><PlayIcon /></span>
+              <span>Play portfolio</span>
+            </button>
+          </motion.div>
+        )}
+
+        <motion.div {...rise(5)} className="mt-[34px] flex flex-wrap justify-center gap-3">
           <a
             href="https://github.com/Blanq-one"
             target="_blank"
@@ -121,7 +190,7 @@ const Hero = () => {
           </a>
         </motion.div>
 
-        <motion.div {...rise(5)} className="mt-7 flex justify-center">
+        <motion.div {...rise(6)} className="mt-7 flex justify-center">
           <button
             type="button"
             onClick={scrollToNext}
