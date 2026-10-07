@@ -213,7 +213,9 @@ const PlayerBar = () => {
       showTip(e.clientX, secs[indexFor(f)].label);
     };
 
-    // Any wheel stops the tour; touch or keys only when outside the bar
+    // Any wheel stops the tour; pointer presses, touch or keys only when outside the bar.
+    // A press always lands before its click, so a click that starts the tour
+    // (the hero pill) runs after this stop and is never cancelled by it.
     const onWheel = () => stopTour();
     const onOutside = (e) => {
       if (touring && !bar.contains(e.target)) stopTour();
@@ -240,6 +242,7 @@ const PlayerBar = () => {
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerCancel);
     window.addEventListener('wheel', onWheel, { passive: true });
+    window.addEventListener('pointerdown', onOutside, { passive: true });
     window.addEventListener('touchstart', onOutside, { passive: true });
     window.addEventListener('keydown', onOutside);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -265,6 +268,7 @@ const PlayerBar = () => {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerCancel);
       window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('pointerdown', onOutside);
       window.removeEventListener('touchstart', onOutside);
       window.removeEventListener('keydown', onOutside);
       window.removeEventListener('scroll', onScroll);
