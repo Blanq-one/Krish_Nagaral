@@ -74,6 +74,44 @@ body::before {
     border: 1px solid var(--stroke);
   }
 
+  /* Pill buttons. Pair .btn-glass with .glass for the frosted look. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s, box-shadow 0.2s;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: #04130a;
+  }
+
+  .btn-primary:hover {
+    background: var(--green-hi);
+    box-shadow: 0 8px 24px rgba(30, 215, 96, 0.28);
+  }
+
+  .btn-glass {
+    color: var(--text);
+  }
+
+  .btn-glass:hover {
+    background: var(--glass-hi);
+  }
+
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .glass {
       background: #17171a;

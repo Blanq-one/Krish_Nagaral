@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
-import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
+import PillNav from './components/PillNav';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import Hero from './sections/Hero';
@@ -16,7 +15,6 @@ import Contact from './sections/Contact';
 import ProjectDetail from './pages/ProjectDetail';
 
 const AppContent = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -76,25 +74,20 @@ const AppContent = () => {
     }
   }, [location]);
 
-  // Don't show sidebar/navbar on project detail pages
+  // Don't show the nav on project detail pages
   const isProjectDetail = location.pathname.includes('/project/');
 
   // No background on the wrapper so the body crosshatch texture shows through
   return (
     <div className="min-h-screen text-white">
       <ScrollProgress />
-      {!isProjectDetail && (
-        <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      )}
-      <div className={!isProjectDetail ? "md:ml-64" : ""}>
-        {!isProjectDetail && (
-          <Navbar onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} isMenuOpen={isMenuOpen} />
-        )}
+      {!isProjectDetail && <PillNav />}
+      <div>
         <Routes>
           <Route
             path="/"
             element={
-              <main className="pt-16">
+              <main>
                 <Hero />
                 <About />
                 <Skills />
