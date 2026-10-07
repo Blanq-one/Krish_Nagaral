@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -78,8 +79,9 @@ const AppContent = () => {
   // Don't show sidebar/navbar on project detail pages
   const isProjectDetail = location.pathname.includes('/project/');
 
+  // No background on the wrapper so the body crosshatch texture shows through
   return (
-    <div className="min-h-screen bg-spotify-black text-white">
+    <div className="min-h-screen text-white">
       <ScrollProgress />
       {!isProjectDetail && (
         <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
@@ -116,9 +118,11 @@ function App() {
   const basename = import.meta.env.PROD ? '/Krish_Nagaral' : '/';
   
   return (
-    <BrowserRouter basename={basename}>
-      <AppContent />
-    </BrowserRouter>
+    <MotionConfig reducedMotion="user">
+      <BrowserRouter basename={basename}>
+        <AppContent />
+      </BrowserRouter>
+    </MotionConfig>
   );
 }
 
