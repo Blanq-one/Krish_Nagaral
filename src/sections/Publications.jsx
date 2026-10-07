@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { publications } from '../data/publications';
 
@@ -69,10 +69,15 @@ const Publications = () => {
                       href={pub.pdf}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn btn-glass glass justify-self-start whitespace-nowrap"
+                      className="btn btn-glass glass gap-2.5 justify-self-start whitespace-nowrap py-1.5 pl-1.5 pr-[18px]"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <ExternalLink size={18} />
+                      <span
+                        aria-hidden="true"
+                        className="grid h-7 w-7 flex-none place-items-center rounded-full bg-green-hi text-[#04130a]"
+                      >
+                        <ArrowUpRight size={16} />
+                      </span>
                       <span>View Paper</span>
                     </a>
                   )
