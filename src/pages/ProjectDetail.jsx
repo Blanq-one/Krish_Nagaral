@@ -34,7 +34,7 @@ const ProjectDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-spotify-black text-white pt-16">
+    <div className="min-h-screen text-white pt-16">
       <div className="container mx-auto max-w-5xl px-6 py-12">
                 <motion.button
                   initial={{ opacity: 0, x: -20 }}

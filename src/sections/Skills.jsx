@@ -19,8 +19,8 @@ const skillCategories = [
   { title: 'Languages', skills: skills.languages, accent: 'neutral', layout: 'sm:order-1 lg:col-span-2' },
   { title: 'ML/AI', skills: skills.mlAi, accent: 'green', layout: 'sm:order-3 sm:col-span-2 lg:col-span-4' },
   { title: 'DevOps / Cloud', skills: skills.cloudDevOps, accent: 'blue', layout: 'sm:order-4 sm:col-span-2 lg:col-span-4' },
-  { title: 'Computer Vision', skills: skills.computerVision, accent: 'neutral', layout: 'sm:order-2 lg:col-span-2' },
-  { title: 'MLOps & Deployment', skills: skills.mlops, accent: 'neutral', layout: 'sm:order-5 sm:col-span-2 lg:col-span-2' },
+  { title: 'Computer Vision', skills: skills.computerVision, accent: 'green', layout: 'sm:order-2 lg:col-span-2' },
+  { title: 'MLOps & Deployment', skills: skills.mlops, accent: 'blue', layout: 'sm:order-5 sm:col-span-2 lg:col-span-2' },
   { title: 'Databases', skills: skills.databases, accent: 'cyan', layout: 'sm:order-6 lg:col-span-2' },
   { title: 'Tools', skills: skills.tools, accent: 'neutral', layout: 'sm:order-7 lg:col-span-2' },
 ];
