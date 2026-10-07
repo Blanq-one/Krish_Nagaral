@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollProgress from './components/ScrollProgress';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -79,6 +80,7 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-spotify-black text-white">
+      <ScrollProgress />
       {!isProjectDetail && (
         <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       )}
