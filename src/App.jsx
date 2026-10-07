@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
 import PillNav from './components/PillNav';
+import PlayerBar from './components/PlayerBar';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import Hero from './sections/Hero';
@@ -74,7 +75,7 @@ const AppContent = () => {
     }
   }, [location]);
 
-  // Don't show the nav on project detail pages
+  // Don't show the nav or the page player on project detail pages
   const isProjectDetail = location.pathname.includes('/project/');
 
   // No background on the wrapper so the body crosshatch texture shows through
@@ -82,12 +83,14 @@ const AppContent = () => {
     <div className="min-h-screen text-white">
       <ScrollProgress />
       {!isProjectDetail && <PillNav />}
+      {!isProjectDetail && <PlayerBar />}
       <div>
         <Routes>
           <Route
             path="/"
             element={
-              <main>
+              <main className="pb-[130px]">
+                {/* Bottom clearance so the floating player never covers the last content */}
                 <Hero />
                 <About />
                 <Skills />
