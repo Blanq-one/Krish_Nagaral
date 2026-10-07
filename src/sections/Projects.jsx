@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import SectionTitle from '../components/SectionTitle';
 import ProjectTile from '../components/ProjectTile';
@@ -11,19 +11,127 @@ const hasFinePointer = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+// Cover Flow depth for a tile at normalized distance d (-1 to 1) from the center
+const depthStyle = (d) => ({
+  transform: `perspective(1000px) rotateY(${(-d * 30).toFixed(2)}deg) scale(${(1 - Math.abs(d) * 0.12).toFixed(3)})`,
+  opacity: (1 - Math.abs(d) * 0.4).toFixed(3),
+});
+
 const Projects = () => {
   const [filter, setFilter] = useState('all');
   const [finePointer] = useState(hasFinePointer);
+  const [focusIndex, setFocusIndex] = useState(0);
   const reduceMotion = useReducedMotion();
   const shelfRef = useRef(null);
+  const focusRef = useRef(0);
+  const frameRef = useRef(0);
+  const calmRef = useRef(reduceMotion);
+  calmRef.current = reduceMotion;
+  // Cached geometry so scroll frames never read layout
+  const geometryRef = useRef({ centers: [], half: 0, lastD: [] });
 
-  const visible = filter === 'all' ? getAllProjects() : projects[filter] ?? [];
+  const visible = useMemo(
+    () => (filter === 'all' ? getAllProjects() : projects[filter] ?? []),
+    [filter]
+  );
   const canTilt = finePointer && !reduceMotion;
 
-  const handleFilter = (key) => {
-    setFilter(key);
-    if (shelfRef.current) shelfRef.current.scrollLeft = 0;
+  // One pass per frame: find the centered tile and update depth on tiles whose
+  // depth changed. Tiles far from the center stay clamped at +/-1 and are skipped.
+  const updateDepth = () => {
+    frameRef.current = 0;
+    const shelf = shelfRef.current;
+    const geo = geometryRef.current;
+    if (!shelf || !geo.centers.length) return;
+    const mid = shelf.scrollLeft + geo.half;
+    const items = shelf.children;
+    let best = 0;
+    let bestDist = Infinity;
+    geo.centers.forEach((center, i) => {
+      const dist = center - mid;
+      if (Math.abs(dist) < bestDist) {
+        bestDist = Math.abs(dist);
+        best = i;
+      }
+      if (calmRef.current) return;
+      const d = Math.round(Math.max(-1, Math.min(1, dist / geo.half)) * 1000) / 1000;
+      if (geo.lastD[i] === d || !items[i]) return;
+      geo.lastD[i] = d;
+      Object.assign(items[i].style, depthStyle(d));
+    });
+    if (best !== focusRef.current) {
+      focusRef.current = best;
+      setFocusIndex(best);
+    }
   };
+
+  const scheduleDepth = () => {
+    if (!frameRef.current) frameRef.current = requestAnimationFrame(updateDepth);
+  };
+
+  // Center padding so the first and last tile can sit in the middle, then
+  // re-cache tile centers and repaint depth
+  const layoutShelf = () => {
+    const shelf = shelfRef.current;
+    if (!shelf) return;
+    const geo = geometryRef.current;
+    const items = [...shelf.children];
+    if (!items.length) {
+      geo.centers = [];
+      return;
+    }
+    const tileWidth = items[0].offsetWidth;
+    const gap = parseFloat(getComputedStyle(shelf).columnGap) || 0;
+    const pad = Math.max(0, (shelf.clientWidth - tileWidth) / 2);
+    shelf.style.paddingLeft = `${pad}px`;
+    shelf.style.paddingRight = `${pad}px`;
+    geo.half = shelf.clientWidth / 2;
+    // Computed rather than read back: the reduced-motion stylesheet gives every
+    // property a tiny transition, so offsets read right after the padding write
+    // can still reflect the old padding
+    geo.centers = items.map((_, i) => pad + i * (tileWidth + gap) + tileWidth / 2);
+    geo.lastD = [];
+    if (calmRef.current) {
+      items.forEach((el) => {
+        el.style.transform = '';
+        el.style.opacity = '';
+      });
+    }
+    updateDepth();
+    // Snapping may settle a frame later; check again then
+    scheduleDepth();
+  };
+
+  // Listeners go on before the first layout so the browser's re-snap after the
+  // padding change is never missed
+  useLayoutEffect(() => {
+    const shelf = shelfRef.current;
+    shelf.addEventListener('scroll', scheduleDepth, { passive: true });
+    window.addEventListener('resize', layoutShelf);
+    window.addEventListener('load', layoutShelf);
+    return () => {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = 0;
+      shelf.removeEventListener('scroll', scheduleDepth);
+      window.removeEventListener('resize', layoutShelf);
+      window.removeEventListener('load', layoutShelf);
+    };
+  }, []);
+
+  // New list (filter change): lay out and start on the first project
+  useLayoutEffect(() => {
+    const shelf = shelfRef.current;
+    if (!shelf) return;
+    shelf.scrollLeft = 0;
+    focusRef.current = 0;
+    setFocusIndex(0);
+    layoutShelf();
+  }, [visible]);
+
+  // Reduced motion toggled: flatten or restore depth
+  useEffect(() => {
+    layoutShelf();
+  }, [reduceMotion]);
 
   return (
     <section id="projects" className="py-20 px-6">
@@ -40,7 +148,7 @@ const Projects = () => {
                 key={key}
                 type="button"
                 aria-pressed={filter === key}
-                onClick={() => handleFilter(key)}
+                onClick={() => setFilter(key)}
                 className="whitespace-nowrap rounded-full px-3.5 py-[7px] text-[0.88rem] font-semibold text-text-2 transition-colors hover:text-text aria-pressed:bg-white/[0.12] aria-pressed:text-text"
               >
                 {title}
@@ -59,17 +167,24 @@ const Projects = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <ul
-            ref={shelfRef}
-            role="list"
-            className="-mx-1.5 grid snap-x snap-proximity auto-cols-[clamp(212px,23vw,268px)] grid-flow-col gap-2.5 overflow-x-auto px-1.5 pb-[30px] pt-1.5 [mask-image:linear-gradient(90deg,#000_90%,transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {visible.map((project) => (
-              <li key={project.id} className="snap-start">
-                <ProjectTile project={project} canTilt={canTilt} />
-              </li>
-            ))}
-          </ul>
+          <div className="shelf-wrap relative [--tile-w:clamp(212px,23vw,268px)]">
+            <ul
+              ref={shelfRef}
+              role="list"
+              className="shelf relative grid snap-x snap-mandatory auto-cols-[var(--tile-w)] grid-flow-col gap-2.5 overflow-x-auto pb-[34px] pt-[14px] [mask-image:linear-gradient(90deg,transparent_0,#000_9%,#000_91%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {visible.map((project, i) => (
+                <li
+                  key={project.id}
+                  className={`snap-center [scroll-snap-stop:always] [transform-origin:50%_55%] will-change-[transform,opacity] ${
+                    i === focusIndex ? 'is-focus' : ''
+                  }`}
+                >
+                  <ProjectTile project={project} canTilt={canTilt} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </motion.div>
       </div>
     </section>

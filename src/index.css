@@ -613,6 +613,15 @@ html {
   }
 }
 
+/* Cover Flow projects carousel: the centered tile gets a green title */
+.shelf h3 {
+  transition: color 0.25s;
+}
+
+.shelf .is-focus h3 {
+  color: var(--green-hi);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
