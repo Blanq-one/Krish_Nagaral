@@ -622,6 +622,146 @@ html {
   color: var(--green-hi);
 }
 
+.shelf:focus-visible {
+  outline: 2px solid var(--green-hi);
+  outline-offset: -2px;
+  border-radius: var(--r-lg);
+}
+
+/* Round glass arrows, vertically centered on the cover */
+.edge {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--tile-w) / 2 + 14px);
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07));
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24), 0 12px 30px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s, background 0.2s;
+}
+
+.edge svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.edge-l {
+  left: 0;
+}
+
+.edge-r {
+  right: 0;
+}
+
+.edge:hover:not(:disabled) {
+  transform: translateY(-50%) scale(1.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
+}
+
+.edge:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.edge:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+/* Shuffle button and "N of M" counter under the carousel */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: -6px;
+  color: var(--text-2);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.pg-b {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
+  transition: transform 0.2s, background 0.2s;
+}
+
+.pg-b svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pg-b:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.09));
+}
+
+.pg-b:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.pg-b:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.pg-b.spin svg {
+  animation: pg-spin 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes pg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .edge {
+    width: 40px;
+    height: 40px;
+  }
+
+  .edge svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+@media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+  .edge {
+    background: #1b1b1f;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

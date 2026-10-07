@@ -5,15 +5,23 @@ import { Play } from 'lucide-react';
 // Shelf tile: square cover over a blurred copy of the same image, title and a
 // 2-line description. The whole tile links to the project detail page.
 // When canTilt is set, the cover tilts toward the cursor with a soft highlight.
-const ProjectTile = ({ project, canTilt }) => {
+// In the carousel, a click on a tile that is not centered only centers it.
+const ProjectTile = ({ project, canTilt, focused = true, onCenter, onOpen }) => {
   const coverRef = useRef(null);
   const frameRef = useRef(0);
 
   useEffect(() => () => cancelAnimationFrame(frameRef.current), []);
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    const modified = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
+    if (!focused && !modified) {
+      e.preventDefault();
+      onCenter?.();
+      return;
+    }
     // Save current scroll position before navigating
     sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+    onOpen?.(project.id);
   };
 
   const handlePointerMove = (e) => {
