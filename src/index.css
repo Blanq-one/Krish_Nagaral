@@ -639,14 +639,28 @@ html {
   border-radius: var(--r-lg);
 }
 
-/* Round glass arrows, vertically centered on the cover */
-.edge {
-  position: absolute;
-  z-index: 3;
-  top: calc(var(--tile-w) / 2 + 14px);
-  transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+/* Pager under the carousel, aligned with the first cover: previous,
+   "N of M" counter, next and shuffle as round glass buttons */
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -6px;
+  padding-left: 10px;
+  color: var(--text-2);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.pg-count {
+  min-width: 76px;
+  text-align: center;
+}
+
+.pg-b {
+  width: 44px;
+  height: 44px;
+  flex: none;
   border-radius: 50%;
   padding: 0;
   display: grid;
@@ -661,62 +675,8 @@ html {
   transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s, background 0.2s;
 }
 
-.edge svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.edge-l {
-  left: 0;
-}
-
-.edge-r {
-  right: 0;
-}
-
-.edge:hover:not(:disabled) {
-  transform: translateY(-50%) scale(1.08);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
-}
-
-.edge:active:not(:disabled) {
-  transform: translateY(-50%) scale(0.94);
-}
-
-.edge:disabled {
-  opacity: 0.28;
-  cursor: default;
-}
-
-/* Shuffle button and "N of M" counter under the carousel */
-.pager {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-top: -6px;
-  color: var(--text-2);
-  font-size: 0.92rem;
-  font-weight: 600;
-}
-
-.pg-b {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  padding: 0;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
-  transition: transform 0.2s, background 0.2s;
+.pg-shuffle {
+  margin-left: 10px;
 }
 
 .pg-b svg {
@@ -729,12 +689,19 @@ html {
   stroke-linejoin: round;
 }
 
+.pg-b .pg-chev {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.3;
+}
+
 .pg-b:hover:not(:disabled) {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.09));
+  transform: scale(1.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.1));
 }
 
 .pg-b:active:not(:disabled) {
-  transform: scale(0.92);
+  transform: scale(0.94);
 }
 
 .pg-b:disabled {
@@ -753,19 +720,14 @@ html {
 }
 
 @media (max-width: 640px) {
-  .edge {
+  .pg-b {
     width: 40px;
     height: 40px;
-  }
-
-  .edge svg {
-    width: 19px;
-    height: 19px;
   }
 }
 
 @media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
-  .edge {
+  .pg-b {
     background: #1b1b1f;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;

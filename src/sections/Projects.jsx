@@ -18,7 +18,7 @@ const readReturnId = () => {
 };
 
 const Chevron = ({ d }) => (
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>
+  <svg className="pg-chev" viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>
 );
 
 // Cover tilt only for a real mouse or trackpad
@@ -249,24 +249,6 @@ const Projects = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="shelf-wrap relative [--tile-w:clamp(212px,23vw,268px)]">
-            <button
-              type="button"
-              className="edge edge-l"
-              onClick={() => goTo(focusIndex - 1)}
-              disabled={focusIndex <= 0}
-              aria-label="Previous project"
-            >
-              <Chevron d="M15 5l-7 7 7 7" />
-            </button>
-            <button
-              type="button"
-              className="edge edge-r"
-              onClick={() => goTo(focusIndex + 1)}
-              disabled={focusIndex >= visible.length - 1}
-              aria-label="Next project"
-            >
-              <Chevron d="M9 5l7 7-7 7" />
-            </button>
             <ul
               ref={shelfRef}
               role="list"
@@ -296,9 +278,30 @@ const Projects = () => {
 
           <div className="pager">
             <button
-              ref={shuffleRef}
               type="button"
               className="pg-b"
+              onClick={() => goTo(focusIndex - 1)}
+              disabled={focusIndex <= 0}
+              aria-label="Previous project"
+            >
+              <Chevron d="M15 5l-7 7 7 7" />
+            </button>
+            <span className="pg-count">
+              {visible.length ? focusIndex + 1 : 0} of {visible.length}
+            </span>
+            <button
+              type="button"
+              className="pg-b"
+              onClick={() => goTo(focusIndex + 1)}
+              disabled={focusIndex >= visible.length - 1}
+              aria-label="Next project"
+            >
+              <Chevron d="M9 5l7 7-7 7" />
+            </button>
+            <button
+              ref={shuffleRef}
+              type="button"
+              className="pg-b pg-shuffle"
               onClick={shuffle}
               onAnimationEnd={(e) => e.currentTarget.classList.remove('spin')}
               disabled={visible.length < 2}
@@ -312,9 +315,6 @@ const Projects = () => {
                 <path d="M4 4l5 5" />
               </svg>
             </button>
-            <span>
-              {visible.length ? focusIndex + 1 : 0} of {visible.length}
-            </span>
           </div>
         </motion.div>
       </div>
