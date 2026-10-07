@@ -89,17 +89,6 @@ const Projects = () => {
     if (!frameRef.current) frameRef.current = requestAnimationFrame(updateDepth);
   };
 
-  // Fade both edges once the shelf has scrolled away from the start
-  const updateFade = () => {
-    const shelf = shelfRef.current;
-    if (shelf) shelf.classList.toggle('is-scrolled', shelf.scrollLeft > 2);
-  };
-
-  const handleScroll = () => {
-    updateFade();
-    scheduleDepth();
-  };
-
   // Scroll so project i sits in the left slot
   const goTo = (i, instant = false) => {
     const shelf = shelfRef.current;
@@ -167,7 +156,6 @@ const Projects = () => {
         el.style.opacity = '';
       });
     }
-    updateFade();
     updateDepth();
     // Snapping may settle a frame later; check again then
     scheduleDepth();
@@ -177,13 +165,13 @@ const Projects = () => {
   // padding change is never missed
   useLayoutEffect(() => {
     const shelf = shelfRef.current;
-    shelf.addEventListener('scroll', handleScroll, { passive: true });
+    shelf.addEventListener('scroll', scheduleDepth, { passive: true });
     window.addEventListener('resize', layoutShelf);
     window.addEventListener('load', layoutShelf);
     return () => {
       cancelAnimationFrame(frameRef.current);
       frameRef.current = 0;
-      shelf.removeEventListener('scroll', handleScroll);
+      shelf.removeEventListener('scroll', scheduleDepth);
       window.removeEventListener('resize', layoutShelf);
       window.removeEventListener('load', layoutShelf);
     };
