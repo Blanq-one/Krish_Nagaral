@@ -63,7 +63,7 @@ const PillNav = () => {
         <img
           src={getPublicPath('pfp.png')}
           alt="Krish Nagaral"
-          className="mr-1 h-[34px] w-[34px] flex-none rounded-full border border-[color:var(--stroke-hi)] object-cover"
+          className="mr-1 h-10 w-10 flex-none rounded-full border border-[color:var(--stroke-hi)] object-cover"
         />
         <div
           ref={linksRef}
