@@ -613,7 +613,18 @@ html {
   }
 }
 
-/* Cover Flow projects carousel: the centered tile gets a green title */
+/* Projects carousel: right-edge fade at the start, both edges once scrolled */
+.shelf {
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, #000 0, #000 90%, transparent);
+}
+
+.shelf.is-scrolled {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 90%, transparent 100%);
+}
+
+/* The focused tile gets a green title */
 .shelf h3 {
   transition: color 0.25s;
 }

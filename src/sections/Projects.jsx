@@ -6,7 +6,7 @@ import { projects, projectCategories, getAllProjects } from '../data/projects';
 
 const filters = [{ key: 'all', title: 'All' }, ...projectCategories];
 
-// Project opened from the carousel, so "Back to Projects" can re-center on it
+// Project opened from the carousel, so "Back to Projects" can return to it
 const RETURN_KEY = 'projectsCarouselId';
 
 // Read once on mount: only when coming back through "Back to Projects",
@@ -26,11 +26,14 @@ const hasFinePointer = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-// Cover Flow depth for a tile at normalized distance d (-1 to 1) from the center
+// Cover Flow depth for a tile at normalized distance d (-1 to 1) from the focus slot
 const depthStyle = (d) => ({
   transform: `perspective(1000px) rotateY(${(-d * 30).toFixed(2)}deg) scale(${(1 - Math.abs(d) * 0.12).toFixed(3)})`,
   opacity: (1 - Math.abs(d) * 0.4).toFixed(3),
 });
+
+// Inset of the focus slot from the shelf's left edge, matching the shelf padding
+const SLOT = 6;
 
 const Projects = () => {
   const [filter, setFilter] = useState('all');
@@ -46,7 +49,7 @@ const Projects = () => {
   const calmRef = useRef(reduceMotion);
   calmRef.current = reduceMotion;
   // Cached geometry so scroll frames never read layout
-  const geometryRef = useRef({ centers: [], half: 0, lastD: [] });
+  const geometryRef = useRef({ lefts: [], inners: [], half: 0, slot: 0, range: 1, lastD: [] });
 
   const visible = useMemo(
     () => (filter === 'all' ? getAllProjects() : projects[filter] ?? []),
@@ -54,28 +57,27 @@ const Projects = () => {
   );
   const canTilt = finePointer && !reduceMotion;
 
-  // One pass per frame: find the centered tile and update depth on tiles whose
-  // depth changed. Tiles far from the center stay clamped at +/-1 and are skipped.
+  // One pass per frame: find the tile nearest the left slot and update depth on
+  // tiles whose depth changed. Far tiles stay clamped at +/-1 and are skipped.
   const updateDepth = () => {
     frameRef.current = 0;
     const shelf = shelfRef.current;
     const geo = geometryRef.current;
-    if (!shelf || !geo.centers.length) return;
-    const mid = shelf.scrollLeft + geo.half;
-    const items = shelf.children;
+    if (!shelf || !geo.lefts.length) return;
+    const focusX = shelf.scrollLeft + geo.slot;
     let best = 0;
     let bestDist = Infinity;
-    geo.centers.forEach((center, i) => {
-      const dist = center - mid;
+    geo.lefts.forEach((left, i) => {
+      const dist = left + geo.half - focusX;
       if (Math.abs(dist) < bestDist) {
         bestDist = Math.abs(dist);
         best = i;
       }
       if (calmRef.current) return;
-      const d = Math.round(Math.max(-1, Math.min(1, dist / geo.half)) * 1000) / 1000;
-      if (geo.lastD[i] === d || !items[i]) return;
+      const d = Math.round(Math.max(-1, Math.min(1, dist / geo.range)) * 1000) / 1000;
+      if (geo.lastD[i] === d || !geo.inners[i]) return;
       geo.lastD[i] = d;
-      Object.assign(items[i].style, depthStyle(d));
+      Object.assign(geo.inners[i].style, depthStyle(d));
     });
     if (best !== focusRef.current) {
       focusRef.current = best;
@@ -87,20 +89,31 @@ const Projects = () => {
     if (!frameRef.current) frameRef.current = requestAnimationFrame(updateDepth);
   };
 
-  // Scroll so project i sits in the center
+  // Fade both edges once the shelf has scrolled away from the start
+  const updateFade = () => {
+    const shelf = shelfRef.current;
+    if (shelf) shelf.classList.toggle('is-scrolled', shelf.scrollLeft > 2);
+  };
+
+  const handleScroll = () => {
+    updateFade();
+    scheduleDepth();
+  };
+
+  // Scroll so project i sits in the left slot
   const goTo = (i, instant = false) => {
     const shelf = shelfRef.current;
     const geo = geometryRef.current;
-    if (!shelf || !geo.centers.length) return;
-    const index = Math.max(0, Math.min(geo.centers.length - 1, i));
+    if (!shelf || !geo.lefts.length) return;
+    const index = Math.max(0, Math.min(geo.lefts.length - 1, i));
     shelf.scrollTo({
-      left: geo.centers[index] - geo.half,
+      left: Math.max(0, geo.lefts[index] - SLOT),
       behavior: instant || calmRef.current ? 'instant' : 'smooth',
     });
   };
 
   const shuffle = () => {
-    const count = geometryRef.current.centers.length;
+    const count = geometryRef.current.lefts.length;
     if (count < 2) return;
     let next = focusRef.current;
     while (next === focusRef.current) next = Math.floor(Math.random() * count);
@@ -114,7 +127,7 @@ const Projects = () => {
   };
 
   const handleKeyDown = (e) => {
-    const count = geometryRef.current.centers.length;
+    const count = geometryRef.current.lefts.length;
     const moves = { ArrowRight: focusRef.current + 1, ArrowLeft: focusRef.current - 1, Home: 0, End: count - 1 };
     if (!(e.key in moves)) return;
     e.preventDefault();
@@ -126,34 +139,35 @@ const Projects = () => {
     setFilter(key);
   };
 
-  // Center padding so the first and last tile can sit in the middle, then
-  // re-cache tile centers and repaint depth
+  // Right padding so the last tile can reach the left slot, then re-cache tile
+  // offsets and repaint depth
   const layoutShelf = () => {
     const shelf = shelfRef.current;
     if (!shelf) return;
     const geo = geometryRef.current;
     const items = [...shelf.children];
     if (!items.length) {
-      geo.centers = [];
+      geo.lefts = [];
+      geo.inners = [];
       return;
     }
     const tileWidth = items[0].offsetWidth;
-    const gap = parseFloat(getComputedStyle(shelf).columnGap) || 0;
-    const pad = Math.max(0, (shelf.clientWidth - tileWidth) / 2);
-    shelf.style.paddingLeft = `${pad}px`;
-    shelf.style.paddingRight = `${pad}px`;
-    geo.half = shelf.clientWidth / 2;
-    // Computed rather than read back: the reduced-motion stylesheet gives every
-    // property a tiny transition, so offsets read right after the padding write
-    // can still reflect the old padding
-    geo.centers = items.map((_, i) => pad + i * (tileWidth + gap) + tileWidth / 2);
+    shelf.style.paddingRight = `${Math.max(SLOT, shelf.clientWidth - tileWidth - SLOT)}px`;
+    geo.half = tileWidth / 2;
+    geo.slot = SLOT + tileWidth / 2;
+    geo.range = shelf.clientWidth * 0.6 || 1;
+    // Left padding is fixed, so offsets do not depend on the padding write above
+    geo.lefts = items.map((el) => el.offsetLeft);
+    geo.inners = items.map((el) => el.querySelector('[data-depth]'));
     geo.lastD = [];
     if (calmRef.current) {
-      items.forEach((el) => {
+      geo.inners.forEach((el) => {
+        if (!el) return;
         el.style.transform = '';
         el.style.opacity = '';
       });
     }
+    updateFade();
     updateDepth();
     // Snapping may settle a frame later; check again then
     scheduleDepth();
@@ -163,13 +177,13 @@ const Projects = () => {
   // padding change is never missed
   useLayoutEffect(() => {
     const shelf = shelfRef.current;
-    shelf.addEventListener('scroll', scheduleDepth, { passive: true });
+    shelf.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', layoutShelf);
     window.addEventListener('load', layoutShelf);
     return () => {
       cancelAnimationFrame(frameRef.current);
       frameRef.current = 0;
-      shelf.removeEventListener('scroll', scheduleDepth);
+      shelf.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', layoutShelf);
       window.removeEventListener('load', layoutShelf);
     };
@@ -259,12 +273,12 @@ const Projects = () => {
               tabIndex={0}
               aria-label="Projects carousel"
               onKeyDown={handleKeyDown}
-              className="shelf relative grid snap-x snap-mandatory auto-cols-[var(--tile-w)] grid-flow-col gap-2.5 overflow-x-auto pb-[34px] pt-[14px] [mask-image:linear-gradient(90deg,transparent_0,#000_9%,#000_91%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="shelf relative -mx-1.5 grid snap-x snap-mandatory scroll-pl-1.5 auto-cols-[var(--tile-w)] grid-flow-col gap-2.5 overflow-x-auto pb-[34px] pl-1.5 pt-[14px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               {visible.map((project, i) => (
                 <li
                   key={project.id}
-                  className={`snap-center [scroll-snap-stop:always] [transform-origin:50%_55%] will-change-[transform,opacity] ${
+                  className={`snap-start [scroll-snap-stop:always] ${
                     i === focusIndex ? 'is-focus' : ''
                   }`}
                 >
