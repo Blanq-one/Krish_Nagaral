@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { Play } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { publications } from '../data/publications';
 
@@ -76,7 +76,7 @@ const Publications = () => {
                         aria-hidden="true"
                         className="grid h-7 w-7 flex-none place-items-center rounded-full bg-green-hi text-[#04130a]"
                       >
-                        <ArrowUpRight size={16} />
+                        <Play size={14} fill="currentColor" stroke="none" className="translate-x-px" />
                       </span>
                       <span>View Paper</span>
                     </a>
