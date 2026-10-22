@@ -6,15 +6,19 @@ const Experience = () => {
   const experiences = [
     {
       id: 1,
-      title: "AI Research & Tool Developer Intern",
+      title: "AI/ML Engineer Intern",
       company: "Coutloot & Flyads.ai",
       location: "Mumbai",
       period: "Aug 2024 - Aug 2025",
       achievements: [
-        "Fine-tuned LLaMA and Gemma models using LoRA, achieving a 92% accuracy improvement on domain-specific tasks",
-        "Deployed Docker-based FastAPI inference services supporting 5,000+ concurrent requests, with optimized batching strategies and GPU utilization driving major latency reduction",
-        "Built RAG pipelines using LangChain for context-aware automation, boosting workflow efficiency by 85%",
-        "Researched, trained, and deployed AI cloning models for human avatar generation, integrated into the ad-creation pipeline"
+        "Improved LLM response accuracy to 86% on evaluation benchmarks by fine-tuning LLaMA and Gemma with LoRA, powering prompt and script generation for the video pipeline",
+        "Scaled the AI backend horizontally to 5,000+ concurrent requests by building Docker-based FastAPI microservices around LLM inference pipelines",
+        "Reached 97% contextual retrieval precision by designing RAG pipelines with vector embeddings and semantic search",
+        "Cut API latency by 38% by adding asynchronous processing, request batching, optimized caching, and better GPU utilization",
+        "Improved system reliability by adding structured logging, centralized error handling, and real-time model monitoring dashboards",
+        "Built the generation backend for an AI video marketing tool: async FastAPI job processing around Sora, with fine-tuned LLaMA models writing the prompts, scripts, and captions for on-demand seller videos",
+        "Optimized Sora video generation with reinforcement learning, using seller engagement as the reward to tune presenter presets",
+        "Connected LLM outputs to backend services through function calling, triggering Sora render jobs and returning finished videos to sellers"
       ]
     },
     {
@@ -24,21 +28,24 @@ const Experience = () => {
       location: "Mumbai",
       period: "Apr 2024 - Jun 2024",
       achievements: [
-        "Designed testing frameworks, improving application stability by 88% with 99.8% product reliability before deployment",
-        "Recorded and reported test cases, ensuring traceability and actionable insights for developers",
-        "Improved application performance by systematically identifying and resolving bugs"
+        "Reached 88% defect detection coverage by designing automated and manual testing workflows for backend services",
+        "Ensured 99.8% production stability at release by running regression testing and performance benchmarking",
+        "Sped up developer fixes by documenting API behavior, edge cases, and failure scenarios with traceable test cases"
       ]
     },
     {
       id: 3,
-      title: "Cloud Engineer Intern",
+      title: "Software & Cloud Engineer Intern",
       company: "Tata Communications",
       location: "Mumbai",
       period: "Sep 2023 - Mar 2024",
       achievements: [
-        "Contributed to team efforts in authoring deployment documentation and training materials to enhance onboarding efficiency",
-        "Supported live systems by troubleshooting incidents and collaborating with cross-functional teams",
-        "Applied best practices in AWS EC2, S3, and Lambda to deliver resilient cloud solutions"
+        "Accelerated release cycles by 60% by implementing AWS-based infrastructure and service orchestration across EC2, S3, and Lambda",
+        "Sustained 99.9% application uptime by supporting EC2, S3, IAM, and VPC based production systems",
+        "Improved IoT-to-cloud pipeline performance by 63% by profiling and tuning bottlenecks across device ingestion and cloud processing",
+        "Supported production incident resolution on live systems by analyzing logs and debugging network failures with cross-functional teams",
+        "Deployed software releases across AWS environments, coordinating with developers to keep test and production setups consistent",
+        "Streamlined onboarding by authoring deployment documentation and training materials"
       ]
     }
   ];
