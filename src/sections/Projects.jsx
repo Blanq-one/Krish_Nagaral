@@ -4,8 +4,13 @@ import SectionTitle from '../components/SectionTitle';
 import ProjectTile from '../components/ProjectTile';
 import FeaturedShelf from '../components/FeaturedShelf';
 import { projects, projectCategories, getAllProjects } from '../data/projects';
+import { playerStore } from '../components/playerStore';
 
 const filters = [{ key: 'all', title: 'All' }, ...projectCategories];
+
+// "BoxBox - F1 Pit Stop Strategy Optimizer" -> "BoxBox"; drops " [In Progress]"
+const shortTitle = (title) =>
+  title.replace(/\s*\[In Progress\]/i, '').split(' - ')[0].trim();
 
 // Project opened from the carousel, so "Back to Projects" can return to it
 const RETURN_KEY = 'projectsCarouselId';
@@ -197,6 +202,22 @@ const Projects = () => {
   useEffect(() => {
     sessionStorage.removeItem(RETURN_KEY);
   }, []);
+
+  // Publish the focused project to the player bar; cleared on unmount
+  useEffect(() => {
+    const current = visible[focusIndex];
+    if (!current) {
+      playerStore.set({ projects: null });
+      return;
+    }
+    const filterLabel =
+      filter === 'all' ? 'All projects' : filters.find((f) => f.key === filter)?.title ?? '';
+    playerStore.set({
+      projects: { title: shortTitle(current.title), index: focusIndex, count: visible.length, filterLabel, goTo },
+    });
+  }, [visible, focusIndex, filter]);
+
+  useEffect(() => () => playerStore.set({ projects: null }), []);
 
   // Reduced motion toggled: flatten or restore depth
   useEffect(() => {

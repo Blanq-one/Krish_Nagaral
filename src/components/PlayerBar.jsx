@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { playerStore, prefersReducedMotion } from './playerStore';
+import { playerStore, prefersReducedMotion, usePlayerState } from './playerStore';
 
 // Label and icon per section id. Unknown ids fall back to their id and a dot.
 const META = {
@@ -22,6 +22,18 @@ const TOUR_SPEED = 220; // px per second at 1x
 const ANCHOR_OFFSET = 96; // heading sits this far below the top
 const SNAP_DISTANCE = 0.012;
 
+const SHORTCUTS = [
+  ['Space', 'Play or pause the tour'],
+  ['← →', 'Previous or next'],
+  ['Q', 'Queue'],
+  ['M', 'Skip mode'],
+  ['Esc', 'Close'],
+];
+
+// Keys that belong to a control with its own handling
+const isTypingTarget = (t) =>
+  t instanceof Element && !!t.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]');
+
 const PlayerBar = () => {
   const barRef = useRef(null);
   const rangeRef = useRef(null);
@@ -30,12 +42,20 @@ const PlayerBar = () => {
   const playRef = useRef(null);
   const speedIndexRef = useRef(1);
   const apiRef = useRef({});
+  const queueBtnRef = useRef(null);
+  const keysBtnRef = useRef(null);
+  const popRef = useRef(null);
+  const popStateRef = useRef(null);
 
   const [sections, setSections] = useState([]);
   const [fractions, setFractions] = useState([]);
   const [cur, setCur] = useState(0);
   const [speedIndex, setSpeedIndex] = useState(1);
+  const [pop, setPop] = useState(null); // 'queue' | 'keys' | null
   const reduceMotion = useReducedMotion();
+  const projectNow = usePlayerState((s) => s.projects);
+  const skipMode = usePlayerState((s) => s.skipMode);
+  const touring = usePlayerState((s) => s.touring);
 
   useEffect(() => {
     const bar = barRef.current;
@@ -152,13 +172,34 @@ const PlayerBar = () => {
       setTimeout(() => bar.classList.remove('arrive'), 700);
     };
 
+    // In Projects with skip mode "project", prev/next step the carousel and
+    // fall through to the neighboring section at either end
+    const projectStep = (dir) => {
+      const { projects, skipMode: mode } = playerStore.get();
+      if (secs[curIdx]?.id !== 'projects' || mode !== 'project' || !projects) return false;
+      const target = projects.index + dir;
+      if (target < 0 || target >= projects.count) return false;
+      stopTour();
+      projects.goTo(target);
+      return true;
+    };
+
     apiRef.current = {
-      prev: () => goTo(window.scrollY > anchors[curIdx] + 80 ? curIdx : curIdx - 1),
-      next: () => goTo(curIdx + 1),
+      prev: () => {
+        if (projectStep(-1)) return;
+        const inProjects = secs[curIdx]?.id === 'projects' && playerStore.get().skipMode === 'project';
+        goTo(!inProjects && window.scrollY > anchors[curIdx] + 80 ? curIdx : curIdx - 1);
+      },
+      next: () => {
+        if (projectStep(1)) return;
+        if (curIdx < secs.length - 1) goTo(curIdx + 1);
+      },
       toggle: () => (touring ? stopTour() : startTour()),
+      jump: goTo,
     };
     playerStore.controller = {
       isOn: () => bar.classList.contains('is-on'),
+      currentId: () => secs[curIdx]?.id,
       getBar: () => bar,
       arrive,
       startTour,
@@ -282,6 +323,81 @@ const PlayerBar = () => {
     playerStore.controller?.refresh();
   }, [fractions]);
 
+  popStateRef.current = pop;
+
+  const closePop = (returnFocus = false) => {
+    const open = popStateRef.current;
+    setPop(null);
+    if (returnFocus && open) (open === 'queue' ? queueBtnRef : keysBtnRef).current?.focus();
+  };
+
+  const togglePop = (name) => setPop((p) => (p === name ? null : name));
+
+  // Move focus into a popover when it opens: the current queue item, or the popover itself
+  useEffect(() => {
+    if (!pop) return;
+    const el = popRef.current;
+    (el?.querySelector('[aria-current="true"]') ?? el)?.focus({ preventScroll: true });
+  }, [pop]);
+
+  // Click or tap outside closes the open popover
+  useEffect(() => {
+    if (!pop) return undefined;
+    const onDown = (e) => {
+      const t = e.target;
+      if (popRef.current?.contains(t) || queueBtnRef.current?.contains(t) || keysBtnRef.current?.contains(t)) return;
+      setPop(null);
+    };
+    document.addEventListener('pointerdown', onDown);
+    return () => document.removeEventListener('pointerdown', onDown);
+  }, [pop]);
+
+  // Shortcuts. Ignored while typing, with modifiers, inside the carousel or a
+  // Swiper (they handle their own arrows), or while the bar is hidden.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.shiftKey && e.key !== '?') return;
+      const t = e.target;
+      if (isTypingTarget(t)) return;
+      if (t instanceof Element && t.closest('[aria-label="Projects carousel"], .swiper')) return;
+      if (!playerStore.controller?.isOn()) return;
+      const api = apiRef.current;
+      const key = e.key;
+      if (key === 'Escape') {
+        if (popStateRef.current) {
+          e.preventDefault();
+          closePop(true);
+        }
+        return;
+      }
+      if (key === ' ' || key === 'Spacebar') {
+        if (t instanceof Element && t.closest('button, a, [role="button"]')) return;
+        if (prefersReducedMotion()) return;
+        e.preventDefault();
+        // The window-level "key outside the bar stops the tour" listener must not undo this
+        e.stopPropagation();
+        api.toggle?.();
+      } else if (key === 'ArrowRight') {
+        e.preventDefault();
+        api.next?.();
+      } else if (key === 'ArrowLeft') {
+        e.preventDefault();
+        api.prev?.();
+      } else if (key === 'q' || key === 'Q') {
+        setPop((p) => (p === 'queue' ? null : 'queue'));
+      } else if (key === 'm' || key === 'M') {
+        const { projects, skipMode: mode } = playerStore.get();
+        const onProjects = playerStore.controller?.currentId?.() === 'projects';
+        if (onProjects && projects) playerStore.set({ skipMode: mode === 'project' ? 'section' : 'project' });
+      } else if (key === '?') {
+        setPop((p) => (p === 'keys' ? null : 'keys'));
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
   const cycleSpeed = () => {
     const next = (speedIndexRef.current + 1) % SPEEDS.length;
     speedIndexRef.current = next;
@@ -291,6 +407,15 @@ const PlayerBar = () => {
   const section = sections[cur];
   const count = sections.length;
   const speedLabel = `${SPEEDS[speedIndex]}x`;
+  const onProjects = section?.id === 'projects' && !!projectNow;
+  const projectMode = onProjects && skipMode === 'project';
+  const title = projectMode ? projectNow.title : section?.label;
+  const subline = projectMode
+    ? `Project ${projectNow.index + 1} of ${projectNow.count} \u00b7 ${projectNow.filterLabel}`
+    : count
+      ? `Section ${cur + 1} of ${count}`
+      : '';
+  const toggleMode = () => playerStore.set({ skipMode: projectMode ? 'section' : 'project' });
 
   return (
     <div ref={barRef} className="mp" role="group" aria-label="Page player">
@@ -303,9 +428,23 @@ const PlayerBar = () => {
           <svg viewBox="0 0 24 24">{section?.icon}</svg>
         </div>
         <div className="mp-text">
-          <strong>{section?.label}</strong>
-          <span>{count ? `Section ${cur + 1} of ${count}` : ''}</span>
+          <strong>{title}</strong>
+          <span>{subline}</span>
         </div>
+        <i className="mp-eq" aria-hidden="true">
+          <b /><b /><b /><b />
+        </i>
+        {onProjects && (
+          <button
+            type="button"
+            className="mp-mode"
+            onClick={toggleMode}
+            aria-label={`Skip mode: ${projectMode ? 'by project' : 'by section'}. Switch`}
+          >
+            <span className="mp-long">{projectMode ? 'By project' : 'By section'}</span>
+            <span className="mp-short" aria-hidden="true">{projectMode ? 'Proj' : 'Sect'}</span>
+          </button>
+        )}
         <button
           type="button"
           className="mp-speed"
@@ -321,7 +460,7 @@ const PlayerBar = () => {
             className="mp-b"
             onClick={() => apiRef.current.prev?.()}
             disabled={cur <= 0}
-            aria-label="Previous section"
+            aria-label={projectMode ? 'Previous project' : 'Previous section'}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5l-9 7 9 7zM11 5l-9 7 9 7z" /></svg>
           </button>
@@ -342,12 +481,85 @@ const PlayerBar = () => {
             className="mp-b"
             onClick={() => apiRef.current.next?.()}
             disabled={count === 0 || cur >= count - 1}
-            aria-label="Next section"
+            aria-label={projectMode ? 'Next project' : 'Next section'}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l9 7-9 7zM13 5l9 7-9 7z" /></svg>
           </button>
+          <button
+            ref={queueBtnRef}
+            type="button"
+            className="mp-b mp-queue"
+            onClick={() => togglePop('queue')}
+            aria-expanded={pop === 'queue'}
+            aria-controls="mp-queue"
+            aria-label="Queue"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path className="mp-line" d="M3 6h13M3 12h13M3 18h8" />
+              <path d="M17 13l5 3.5-5 3.5z" />
+            </svg>
+          </button>
+          <button
+            ref={keysBtnRef}
+            type="button"
+            className="mp-b mp-keys"
+            onClick={() => togglePop('keys')}
+            aria-expanded={pop === 'keys'}
+            aria-controls="mp-keys"
+            aria-label="Keyboard shortcuts"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect className="mp-line" x="2.5" y="6" width="19" height="12" rx="2.5" />
+              <path className="mp-line" d="M6.5 10h.01M10 10h.01M14 10h.01M17.5 10h.01M7 14h10" />
+            </svg>
+          </button>
         </div>
       </div>
+      {pop && (
+        <div
+          ref={popRef}
+          id={pop === 'queue' ? 'mp-queue' : 'mp-keys'}
+          className="mp-pop"
+          role="dialog"
+          aria-label={pop === 'queue' ? 'Queue' : 'Shortcuts'}
+          tabIndex={-1}
+        >
+          {pop === 'queue' ? (
+            <ol className="mp-qlist">
+              {sections.map((s, i) => (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    className={i === cur ? 'is-cur' : ''}
+                    aria-current={i === cur ? 'true' : undefined}
+                    onClick={() => {
+                      apiRef.current.jump?.(i);
+                      closePop(true);
+                    }}
+                  >
+                    <em>{i + 1}</em>
+                    <span>{s.label}</span>
+                    {i === cur && <small>Now playing</small>}
+                    {i === cur + 1 && <small className="is-next">Next up</small>}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <>
+              <h3>Shortcuts</h3>
+              <dl className="mp-klist">
+                {SHORTCUTS.map(([k, d]) => (
+                  <div key={k}>
+                    <dt><kbd>{k}</kbd></dt>
+                    <dd>{d}</dd>
+                  </div>
+                ))}
+              </dl>
+            </>
+          )}
+        </div>
+      )}
       <div className="mp-scrub">
         <input
           ref={rangeRef}

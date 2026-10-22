@@ -6,6 +6,11 @@ import { useSyncExternalStore } from 'react';
 let state = {
   born: false, // started from the hero: the bar stays visible even at the top
   touring: false,
+  // Published by the Projects section: { title, index, count, filterLabel, goTo } or null
+  projects: null,
+  // 'project' steps through the Projects carousel, 'section' skips whole sections.
+  // Memory only, no browser storage.
+  skipMode: 'project',
 };
 const listeners = new Set();
 
