@@ -5,6 +5,15 @@ export const projects = {
   // (unchanged) projects kept afterwards within each category.
   aiMl: [
     {
+      id: 18,
+      title: "CodeMentor AI - Multi-Agent Codebase Assistant",
+      description: "Agentic code intelligence platform orchestrating 5 LangGraph agents across 11 FastAPI endpoints, pairing FAISS vector search with Tree-sitter AST parsing to answer codebase queries at p95 < 800ms over streaming SSE",
+      tech: ["FastAPI", "Next.js", "LangGraph", "RAG", "FAISS", "SSE", "Prometheus", "Docker"],
+      image: getPublicPath("codementor_ai.png"),
+      github: "https://github.com/Blanq-one/Codementor-Repo_Analyser",
+      demo: ""
+    },
+    {
       id: 13,
       title: "BoxBox - F1 Pit Stop Strategy Optimizer",
       description: "End-to-end reinforcement learning system that learns optimal F1 pit-stop strategies from 45,623 real telemetry laps across 42 Grand Prix, with a PPO agent gaining 5.7 positions over baseline at 4.67ms p95 inference",
@@ -106,15 +115,6 @@ export const projects = {
     }
   ],
   cloudDevOps: [
-    {
-      id: 18,
-      title: "CodeMentor AI - Multi-Agent Codebase Assistant",
-      description: "Agentic code intelligence platform orchestrating 5 LangGraph agents across 11 FastAPI endpoints, pairing FAISS vector search with Tree-sitter AST parsing to answer codebase queries at p95 < 800ms over streaming SSE",
-      tech: ["FastAPI", "Next.js", "LangGraph", "RAG", "FAISS", "SSE", "Prometheus", "Docker"],
-      image: getPublicPath("codementor_ai.png"),
-      github: "https://github.com/Blanq-one/Codementor-Repo_Analyser",
-      demo: ""
-    },
     {
       id: 17,
       title: "Restaurant Data Management System",
