@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import SectionTitle from '../components/SectionTitle';
 import ProjectTile from '../components/ProjectTile';
+import FeaturedShelf from '../components/FeaturedShelf';
 import { projects, projectCategories, getAllProjects } from '../data/projects';
 
 const filters = [{ key: 'all', title: 'All' }, ...projectCategories];
@@ -205,8 +206,11 @@ const Projects = () => {
   return (
     <section id="projects" className="py-20 px-6">
       <div className="container mx-auto max-w-6xl">
+        <SectionTitle title="Featured" subtitle="Start here" />
+        <FeaturedShelf />
+
         <div className="flex flex-wrap items-end justify-between gap-x-4">
-          <SectionTitle title="Projects" subtitle="Featured work and research" />
+          <SectionTitle title="Projects" subtitle="All work and research" />
           <div
             role="group"
             aria-label="Filter projects"

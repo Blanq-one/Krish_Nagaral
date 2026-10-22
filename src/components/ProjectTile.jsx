@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Play } from 'lucide-react';
+import CoverImage from './CoverImage';
 
 // Shelf tile: square cover over a blurred copy of the same image, title and a
 // 2-line description. The whole tile links to the project detail page.
@@ -70,20 +71,7 @@ const ProjectTile = ({ project, canTilt, focused = true, onCenter, onOpen }) => 
               'perspective(800px) rotateX(calc(var(--rx, 0) * -6deg)) rotateY(calc(var(--ry, 0) * 6deg))',
           }}
         >
-          <span
-            aria-hidden="true"
-            className="absolute inset-[-25%] bg-cover bg-center blur-[26px] saturate-[1.35] brightness-[0.62]"
-            style={{ backgroundImage: `url("${project.image}")` }}
-          />
-          <img
-            src={project.image}
-            alt=""
-            loading="lazy"
-            className="absolute left-0 top-1/2 h-auto w-full -translate-y-1/2"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-          />
+          <CoverImage src={project.image} />
           <span
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 z-[1] opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-[radial-gradient(circle_at_var(--mx,50%)_var(--my,50%),rgba(255,255,255,0.18),transparent_55%)]"

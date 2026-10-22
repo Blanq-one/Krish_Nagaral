@@ -229,3 +229,11 @@ export const getAllProjects = () =>
 // `id` may be the string from the route param, so compare as numbers
 export const getProjectById = (id) =>
   getAllProjects().find((p) => p.id === Number(id));
+
+// Ranked picks for the Featured shelf; array order is the rank. Images come
+// from the matching project via getProjectById.
+export const featuredProjects = [
+  { id: 18, title: "CodeMentor AI", blurb: "Multi-agent codebase assistant. 5 LangGraph agents, 11 endpoints, p95 under 800ms over streaming SSE." },
+  { id: 13, title: "BoxBox", blurb: "F1 pit-stop strategy optimizer. A PPO agent gains 5.7 positions over baseline at 4.67ms p95 inference." },
+  { id: 22, title: "Future Lens", blurb: "Do LLM hidden states predict future tokens? A reproduction and extension study, paper in progress.", badge: "In progress" }
+];
