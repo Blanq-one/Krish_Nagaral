@@ -197,7 +197,7 @@ export const projects = {
       description: "CNN and MobileNet-based disease detection system with TensorFlow Lite deployment for lightweight edge inference on Raspberry Pi",
       tech: ["Python", "TensorFlow", "MobileNet", "TFLite", "Raspberry Pi", "CNN"],
       image: getPublicPath("Plant_disease_detection.jpg"),
-      github: "https://github.com/Blanq-one/Plant-Disease-Detection",
+      github: "https://github.com/Blanq-one/PlantHealthAI",
       demo: ""
     }
   ],
