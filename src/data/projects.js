@@ -144,15 +144,6 @@ export const projects = {
     },
     // --- Unchanged projects (kept after the prioritized list) ---
     {
-      id: 12,
-      title: "Medical Records with Blockchain & RFID",
-      description: "HIPAA-compliant healthcare system with 99.99% data integrity, end-to-end encryption, and secure API gateway with 98% security compliance",
-      tech: ["AWS", "Blockchain", "RFID", "Security", "HIPAA"],
-      image: getPublicPath("medical_record.jpg"),
-      github: "https://github.com/Blanq-one",
-      demo: ""
-    },
-    {
       id: 21,
       title: "AI Assistant Browser Extension",
       description: "High-performance AI assistant browser extension with a FastAPI backend and real-time token streaming via Server-Sent Events for low-latency conversational responses",
