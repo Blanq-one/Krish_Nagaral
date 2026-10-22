@@ -1,8 +1,76 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
 import { getPublicPath } from '../utils/publicPath';
+import { playerStore, prefersReducedMotion, usePlayerState } from '../components/playerStore';
+
+// Staggered rise on load: each hero row fades up 90ms after the previous one
+const rise = (i) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.8, delay: i * 0.09, ease: [0.2, 0.8, 0.2, 1] },
+});
+
+// Soft aurora blobs that drift slowly back and forth
+const blobs = [
+  { className: 'left-[12%] top-[-8%] h-[560px] w-[560px] bg-[rgba(29,185,84,0.22)]', to: { x: 90, y: 70, scale: 1.12 }, duration: 26 },
+  { className: 'right-[6%] top-[8%] h-[480px] w-[480px] bg-[rgba(14,165,164,0.13)]', to: { x: -80, y: 60, scale: 1.08 }, duration: 32 },
+  { className: 'left-[42%] top-[32%] h-[420px] w-[420px] bg-[rgba(59,130,246,0.10)]', to: { x: -60, y: -50, scale: 1.15 }, duration: 38 },
+];
+
+const PlayIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" /></svg>
+);
 
 const Hero = () => {
+  const playRef = useRef(null);
+  const born = usePlayerState((s) => s.born);
+  const reduceMotion = useReducedMotion();
+  // The pill leaves the layout once the player has been started from here
+  const showPlay = !born && !reduceMotion;
+
+  // Morph the pill into the floating player, then start the tour
+  const handlePlay = () => {
+    const player = playerStore.controller;
+    const pill = playRef.current;
+    if (!player || !pill) return;
+    if (player.isOn() || prefersReducedMotion()) {
+      playerStore.set({ born: true });
+      player.refresh();
+      player.startTour();
+      return;
+    }
+
+    const from = pill.getBoundingClientRect();
+    const bar = player.getBar();
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
+    const width = Math.min(560, vw - 20);
+    const height = bar.offsetHeight;
+    const bottom = parseFloat(getComputedStyle(bar).bottom) || 14;
+
+    const ghost = document.createElement('div');
+    ghost.className = 'mp-ghost';
+    ghost.innerHTML =
+      '<span class="mp-ghost-content"><span class="pp-circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span><span>Play portfolio</span></span>';
+    document.body.appendChild(ghost);
+    pill.style.visibility = 'hidden';
+
+    const morph = ghost.animate(
+      [
+        { left: `${from.left}px`, top: `${from.top}px`, width: `${from.width}px`, height: `${from.height}px`, borderRadius: '34px' },
+        { left: `${(vw - width) / 2}px`, top: `${vh - bottom - height}px`, width: `${width}px`, height: `${height}px`, borderRadius: '30px' },
+      ],
+      { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' }
+    );
+    ghost.firstChild.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, fill: 'forwards' });
+    morph.onfinish = () => {
+      player.arrive();
+      ghost.remove();
+      player.startTour();
+    };
+  };
+
   const scrollToNext = () => {
     const aboutSection = document.querySelector('#about');
     if (aboutSection) {
@@ -11,7 +79,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center px-6 pt-20 md:pt-0 overflow-hidden">
+    <section id="hero" className="relative min-h-[100svh] flex items-center justify-center px-6 pt-[120px] pb-24 [@media(min-height:801px)_and_(max-height:940px)]:pt-[104px] [@media(min-height:801px)_and_(max-height:940px)]:pb-12 [@media(max-height:800px)]:pt-[84px] [@media(max-height:800px)]:pb-6 overflow-hidden">
       {/* Faint neural net pattern background - 20% more visible */}
       <div className="absolute inset-0 opacity-[0.036] pointer-events-none overflow-hidden">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -32,210 +100,105 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Grid of projects fading in/out background - 20% more visible, 30% faster */}
-      <div className="absolute inset-0 opacity-[0.18] pointer-events-none overflow-hidden">
-        <div className="grid grid-cols-3 gap-8 p-8 blur-sm">
-          {[...Array(9)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{
-                opacity: [0, 0.36, 0],
-                scale: [0.8, 1, 0.8],
-              }}
-              transition={{
-                duration: 5.6,
-                repeat: Infinity,
-                delay: i * 0.63,
-                ease: "easeInOut",
-              }}
-              className="aspect-square bg-spotify-green rounded-lg"
-            />
-          ))}
-        </div>
+      {/* Aurora, fading out toward the bottom of the hero */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none [mask-image:linear-gradient(180deg,#000_55%,transparent_100%)]"
+      >
+        {blobs.map((blob) => (
+          <motion.i
+            key={blob.duration}
+            animate={blob.to}
+            transition={{ duration: blob.duration, ease: 'easeInOut', repeat: Infinity, repeatType: 'reverse' }}
+            className={`absolute rounded-full blur-[90px] opacity-90 will-change-transform ${blob.className}`}
+          />
+        ))}
       </div>
 
-      <div className="container mx-auto max-w-5xl relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.56 }}
-          className="text-center"
+      <div className="relative z-10 w-full text-center">
+        <motion.img
+          {...rise(0)}
+          src={getPublicPath('pfp.png')}
+          alt="Krish Nagaral"
+          className="mx-auto mb-6 [@media(max-height:800px)]:mb-4 h-24 w-24 rounded-full border border-[color:var(--stroke)] object-cover object-top md:h-[120px] md:w-[120px]"
+        />
+        <motion.h1
+          {...rise(1)}
+          className="m-0 pb-[0.12em] text-[clamp(3.3rem,10.5vw,8.6rem)] font-extrabold leading-[0.94] tracking-[-0.055em] bg-[linear-gradient(180deg,#fff_35%,#8d8d93_130%)] bg-clip-text text-transparent"
         >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.35, delay: 0.14 }}
-            className="mb-8 relative"
-          >
-            {/* Rotating glow animation behind avatar - 20% more visible, 30% faster */}
-            <motion.div
-              animate={{
-                rotate: 360,
-                scale: [1, 1.12, 1],
-              }}
-              transition={{
-                rotate: {
-                  duration: 14,
-                  repeat: Infinity,
-                  ease: "linear",
-                },
-                scale: {
-                  duration: 2.8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-spotify-green/24 via-spotify-green/12 to-transparent blur-2xl pointer-events-none"
-            />
-            
-            {/* Glowing green border around photo */}
-            <motion.div
-              animate={{
-                boxShadow: [
-                  '0 0 20px rgba(29,185,84,0.6), 0 0 40px rgba(29,185,84,0.4), 0 0 60px rgba(29,185,84,0.2)',
-                  '0 0 30px rgba(29,185,84,0.8), 0 0 50px rgba(29,185,84,0.6), 0 0 70px rgba(29,185,84,0.4)',
-                  '0 0 20px rgba(29,185,84,0.6), 0 0 40px rgba(29,185,84,0.4), 0 0 60px rgba(29,185,84,0.2)',
-                ],
-              }}
-              transition={{
-                duration: 2.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="relative w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-spotify-green to-spotify-green-hover mx-auto mb-6 overflow-hidden border-4 border-spotify-green z-10"
+          Krish Nagaral
+        </motion.h1>
+
+        <motion.p
+          {...rise(2)}
+          className="mx-auto mt-7 [@media(max-height:800px)]:mt-5 max-w-[34ch] text-[clamp(1.15rem,2.2vw,1.55rem)] font-medium leading-[1.35] tracking-[-0.015em] text-[#d2d2d7]"
+        >
+          AI/ML Engineer | Published Researcher | Cloud Computing Specialist
+        </motion.p>
+
+        <motion.p
+          {...rise(3)}
+          className="mx-auto mt-3.5 max-w-2xl text-text-2"
+        >
+          Developing production-ready AI systems, fine-tuning LLMs, and building scalable ML solutions. 
+          Expertise in LLM optimization, RAG pipelines, and real-time AI applications.
+        </motion.p>
+
+        {showPlay && (
+          <motion.div {...rise(4)} className="mt-[34px] [@media(max-height:800px)]:mt-[22px] flex justify-center">
+            <button
+              ref={playRef}
+              type="button"
+              onClick={handlePlay}
+              className="play-pill"
+              aria-label="Play portfolio tour"
             >
-              <img
-                src={getPublicPath("pfp.png")}
-                alt="Krish Nagaral"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  if (!e.target.parentElement.querySelector('.pfp-fallback')) {
-                    e.target.parentElement.innerHTML = '<div class="pfp-fallback w-full h-full flex items-center justify-center text-4xl font-bold text-black">KN</div>';
-                  }
-                }}
-              />
-            </motion.div>
+              <span className="pp-circle"><PlayIcon /></span>
+              <span>Play portfolio</span>
+            </button>
           </motion.div>
+        )}
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.56, delay: 0.28 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-4"
+        <motion.div {...rise(5)} className="mt-[34px] [@media(max-height:800px)]:mt-[18px] flex flex-wrap justify-center gap-3">
+          <a
+            href="https://github.com/Blanq-one"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+            aria-label="GitHub"
           >
-            Krish Nagaral
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.42, delay: 0.42 }}
-            className="text-xl md:text-2xl text-gray-300 mb-8"
+            <Github size={18} aria-hidden="true" />
+            <span>GitHub</span>
+          </a>
+          <a
+            href="https://linkedin.com/in/krish-nagaral-7b9188238/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-glass glass"
+            aria-label="LinkedIn"
           >
-            AI/ML Engineer | Published Researcher | Cloud Computing Specialist
-          </motion.p>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.42, delay: 0.56 }}
-            className="text-lg text-gray-300 max-w-2xl mx-auto mb-12"
+            <Linkedin size={18} aria-hidden="true" />
+            <span>LinkedIn</span>
+          </a>
+          <a
+            href="mailto:nagaralkrish@gmail.com"
+            className="btn btn-glass glass"
+            aria-label="Email"
           >
-            Developing production-ready AI systems, fine-tuning LLMs, and building scalable ML solutions. 
-            Expertise in LLM optimization, RAG pipelines, and real-time AI applications.
-          </motion.p>
+            <Mail size={18} aria-hidden="true" />
+            <span>Email</span>
+          </a>
+        </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.42, delay: 0.7 }}
-            className="flex justify-center gap-6 mb-12"
-          >
-            <motion.a
-              href="https://github.com/Blanq-one"
-              target="_blank"
-              rel="noopener noreferrer"
-              animate={{ y: [0, -2.4, 0] }}
-              transition={{
-                y: {
-                  duration: 2.1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              }}
-              whileHover={{ scale: 1.1, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-4 rounded-full bg-spotify-grey hover:bg-spotify-green hover:text-black transition-colors text-white"
-              aria-label="GitHub"
-            >
-              <Github size={24} />
-            </motion.a>
-            <motion.a
-              href="https://linkedin.com/in/krish-nagaral-7b9188238/"
-              target="_blank"
-              rel="noopener noreferrer"
-              animate={{ y: [0, -2.4, 0] }}
-              transition={{
-                y: {
-                  duration: 2.1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.14,
-                },
-              }}
-              whileHover={{ scale: 1.1, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-4 rounded-full bg-spotify-grey hover:bg-spotify-green hover:text-black transition-colors text-white"
-              aria-label="LinkedIn"
-            >
-              <Linkedin size={24} />
-            </motion.a>
-            <motion.a
-              href="mailto:nagaralkrish@gmail.com"
-              animate={{ y: [0, -2.4, 0] }}
-              transition={{
-                y: {
-                  duration: 2.1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.28,
-                },
-              }}
-              whileHover={{ scale: 1.1, y: -5 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-4 rounded-full bg-spotify-grey hover:bg-spotify-green hover:text-black transition-colors text-white"
-              aria-label="Email"
-            >
-              <Mail size={24} />
-            </motion.a>
-          </motion.div>
-
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.42, delay: 0.84 }}
+        <motion.div {...rise(6)} className="mt-7 [@media(max-height:800px)]:mt-3 flex justify-center">
+          <button
+            type="button"
             onClick={scrollToNext}
-            whileHover={{ scale: 1.1, y: 5 }}
-            whileTap={{ scale: 0.95 }}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="rounded-full p-2 text-text-2 transition-colors hover:text-text"
             aria-label="Scroll to About"
           >
-            <motion.div
-              animate={{
-                y: [0, 8, 0],
-                opacity: [0.72, 1, 0.72],
-              }}
-              transition={{
-                duration: 1.4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <ChevronDown size={32} />
-            </motion.div>
-          </motion.button>
+            <ChevronDown size={32} />
+          </button>
         </motion.div>
       </div>
     </section>
@@ -243,4 +206,3 @@ const Hero = () => {
 };
 
 export default Hero;
-

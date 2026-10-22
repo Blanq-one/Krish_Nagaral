@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
+import { MotionConfig } from 'framer-motion';
+import PillNav from './components/PillNav';
+import PlayerBar from './components/PlayerBar';
 import Footer from './components/Footer';
+import ScrollProgress from './components/ScrollProgress';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -14,7 +16,6 @@ import Contact from './sections/Contact';
 import ProjectDetail from './pages/ProjectDetail';
 
 const AppContent = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -74,23 +75,22 @@ const AppContent = () => {
     }
   }, [location]);
 
-  // Don't show sidebar/navbar on project detail pages
+  // Don't show the nav or the page player on project detail pages
   const isProjectDetail = location.pathname.includes('/project/');
 
+  // No background on the wrapper so the body crosshatch texture shows through
   return (
-    <div className="min-h-screen bg-spotify-black text-white">
-      {!isProjectDetail && (
-        <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      )}
-      <div className={!isProjectDetail ? "md:ml-64" : ""}>
-        {!isProjectDetail && (
-          <Navbar onMenuToggle={() => setIsMenuOpen(!isMenuOpen)} isMenuOpen={isMenuOpen} />
-        )}
+    <div className="min-h-screen text-white">
+      <ScrollProgress />
+      {!isProjectDetail && <PillNav />}
+      {!isProjectDetail && <PlayerBar />}
+      <div>
         <Routes>
           <Route
             path="/"
             element={
-              <main className="pt-16">
+              <main className="pb-[130px]">
+                {/* Bottom clearance so the floating player never covers the last content */}
                 <Hero />
                 <About />
                 <Skills />
@@ -114,9 +114,11 @@ function App() {
   const basename = import.meta.env.PROD ? '/Krish_Nagaral' : '/';
   
   return (
-    <BrowserRouter basename={basename}>
-      <AppContent />
-    </BrowserRouter>
+    <MotionConfig reducedMotion="user">
+      <BrowserRouter basename={basename}>
+        <AppContent />
+      </BrowserRouter>
+    </MotionConfig>
   );
 }
 
