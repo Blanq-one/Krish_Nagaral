@@ -536,5 +536,28 @@ export const projectDetails = {
     challenges: "Image captioning requires bridging two very different modalities—vision and language—which makes the encoder/decoder fusion the core challenge, addressed by pairing VGG16 features with an LSTM sequence generator. Training on Flickr8k required careful preprocessing of both images and the five captions per image, plus tokenization and sequence padding for the language model. Evaluating open-ended generated text is inherently difficult; BLEU-1 and BLEU-2 scores were used to quantify caption quality objectively.",
 
     results: "The model successfully generates captions that align with image content, achieving a BLEU-1 score of 0.544 and BLEU-2 of 0.319 on Flickr8k. CaptionCraft AI demonstrates a solid grasp of the classic CNN-plus-LSTM captioning architecture and multimodal deep learning. Planned enhancements include scaling to larger datasets (MSCOCO, Flickr30k), adding richer evaluation metrics (METEOR, ROUGE, CIDEr), and incorporating beam search to improve caption fluency."
+  },
+
+  // Virtual Calendar Application - Project ID: 26
+  26: {
+    overview: "Virtual Calendar Application is a Java desktop application, built on the Model-View-Controller pattern with an additional service layer, for managing multiple named calendars. Each calendar carries its own timezone, and the application supports single and recurring event series, console-based day/week/month views, and CSV export in both a standard format and a Google Calendar-compatible format.",
+
+    features: [
+      "Create and manage multiple named calendars, each assigned its own timezone",
+      "Create single events with subject, start and end datetimes, optional description, location, and public/private status",
+      "Create recurring event series that repeat on specified weekdays, either for a fixed number of occurrences or until a given date",
+      "Edit a single occurrence, all occurrences from a date forward, or every occurrence in a series",
+      "Copy events between calendars (single event, all events on a date, or all events in a date range)",
+      "Query events by date or date range; check busy/available status at a specific datetime",
+      "Export calendars to CSV in standard and Google Calendar-compatible formats",
+      "Interactive mode for live command entry and headless mode for scripted command files",
+      "Console views for day, week, and month display"
+    ],
+
+    technologies: "Built in Java with the Gradle wrapper and tested with JUnit, the application follows MVC with an added service layer coordinating multi-calendar operations. The model layer (`calendar.model`) centers on an immutable `CalendarEvent` value object built via a fluent Builder, stored per-calendar in a `SparseHashCalendar` backed by a sparse HashMap so memory scales with actual event density. The view layer (`calendar.view`) exposes `DayView`, `WeekView`, and `MonthView` for console display. The controller layer (`calendar.controller` and its `parser` package) tokenizes raw commands via a `CommandParser` into typed `ParsedCommand` objects, dispatched by a `CommandHandler` using a command-name-to-handler map. `CalendarServiceImpl` maintains the registry of named calendars and handles cross-calendar copy operations.",
+
+    challenges: "The design favors a Builder for `CalendarEvent`, validating required fields (subject, start, end) in the constructor while keeping optional fields off a bloated constructor. `CommandHandler` uses a dispatch table so new command types can be added as map entries without modifying the core execution logic, following the Open/Closed Principle. The architecture separates concerns along SOLID lines: `CalendarEvent` stays a pure value object, `CommandHandler` only dispatches and delegates, `CalendarServiceImpl` owns calendar lifecycle, and `SparseHashCalendar` owns per-calendar storage.",
+
+    results: "`CalendarView`, `CalendarModel`, and `CalendarService` are kept as separate interfaces so each layer depends only on the behavior it needs, and controllers depend on the `CalendarService` interface rather than a concrete implementation. The project includes a layered test suite (model, view, and controller tests) run via Gradle, and ships both an interactive mode for live use and a headless mode for scripted command files, with the full command reference and syntax documented in `res/USEME.md`."
   }
 };

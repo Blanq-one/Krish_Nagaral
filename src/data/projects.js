@@ -151,6 +151,14 @@ export const projects = {
       image: getPublicPath("ai_assistant_extension.png"),
       github: "https://github.com/Blanq-one/Ai-assistant-Extension",
       demo: ""
+    },
+    {
+      id: 26,
+      title: "Virtual Calendar Application",
+      description: "Java MVC calendar application with a dedicated service layer, supporting multiple named calendars with per-calendar timezones, recurring event series, and CSV export in standard and Google Calendar-compatible formats",
+      tech: ["Java", "Gradle", "JUnit", "MVC", "Builder Pattern"],
+      image: getPublicPath("virtual-calender-image.webp"),
+      github: "https://github.com/Blanq-one/Vitrual-Calender-"
     }
   ],
   computerVision: [
