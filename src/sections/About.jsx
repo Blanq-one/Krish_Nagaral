@@ -34,7 +34,8 @@ const About = () => {
             <p className="text-gray-200 text-lg leading-relaxed mb-6">
               I'm currently an MS in Computer Science student at Northeastern University (AI &amp; ML specialization, 2025–2027),
               building on my BTech in Computer Science from Vellore Institute of Technology. Through internships at Coutloot and
-              Flyads.ai, I fine-tuned LLaMA/Gemma models for a 92% accuracy improvement and deployed Docker-based FastAPI
+              Flyads.ai, I fine-tuned LLaMA/Gemma models with LoRA, improving LLM response accuracy to 86% on evaluation
+              benchmarks, and deployed Docker-based FastAPI
               inference services handling 5,000+ concurrent requests. I'm AWS-certified (Solutions Architect, AI Practitioner,
               and Machine Learning Associate) and specialize in Computer Vision, NLP, Deep Learning, and Cloud Computing.
             </p>
